@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-05 10:27:14">
+<Class name="s01.Controller.Procedimento">
+<Super>%RegisteredObject</Super>
+<TimeChanged>65443,36152.475878</TimeChanged>
+<TimeCreated>65442,41502.179563</TimeCreated>
+
+<Method name="ChamarTratarOpcao">
+<FormalSpec>opcao</FormalSpec>
+<Implementation><![CDATA[
+	Set obj = ##class(s01.Service.Procedimento).%New()
+	Return obj.TratarOpcao(opcao)
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="s01.Controller.Setor">
+<Super>%RegisteredObject</Super>
+<TimeChanged>65442,41502.282956</TimeChanged>
+<TimeCreated>65442,41502.282956</TimeCreated>
+</Class>
+
+
+<Class name="s01.DAO.Procedimento">
+<Super>%RegisteredObject</Super>
+<TimeChanged>65442,41502.496047</TimeChanged>
+<TimeCreated>65442,41502.496047</TimeCreated>
+</Class>
+
+
+<Class name="s01.DAO.Setor">
+<Super>%RegisteredObject</Super>
+<TimeChanged>65442,41502.592621</TimeChanged>
+<TimeCreated>65442,41502.592621</TimeCreated>
+</Class>
+
+
+<Class name="s01.DTO.Procedimento">
+<Super>%RegisteredObject</Super>
+<TimeChanged>65443,37302.910502</TimeChanged>
+<TimeCreated>65442,41502.700189</TimeCreated>
+</Class>
+
+
+<Class name="s01.DTO.Setor">
+<Super>%RegisteredObject</Super>
+<TimeChanged>65442,41502.799127</TimeChanged>
+<TimeCreated>65442,41502.799127</TimeCreated>
+</Class>
+
+
+<Class name="s01.Persistência.Procedimento">
+<Super>%Persistent</Super>
+<TimeChanged>65442,42069.464455</TimeChanged>
+<TimeCreated>65442,41502.902634</TimeCreated>
+
+<Property name="Mnemonico">
+<Type>%String</Type>
+</Property>
+
+<Property name="Descricao">
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="500"/>
+</Property>
+
+<Property name="Preco">
+<Type>%Decimal</Type>
+<Parameter name="MAXVAL" value="99999999.99"/>
+<Parameter name="SCALE" value="2"/>
+</Property>
+
+<Property name="Setor">
+<Type>%Integer</Type>
+</Property>
+
+<Property name="Status">
+<Type>%String</Type>
+</Property>
+</Class>
+
+
+<Class name="s01.Persistência.Setor">
+<Super>%Persistent</Super>
+<TimeChanged>65442,42068.018657</TimeChanged>
+<TimeCreated>65442,41503.002745</TimeCreated>
+
+<Property name="Descricao">
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="100"/>
+</Property>
+
+<Property name="Status">
+<Type>%String</Type>
+</Property>
+</Class>
+
+
+<Class name="s01.Service.Procedimento">
+<Super>%RegisteredObject</Super>
+<TimeChanged>65443,37287.694097</TimeChanged>
+<TimeCreated>65442,41503.103007</TimeCreated>
+
+<Method name="TratarOpcao">
+<FormalSpec>opcao</FormalSpec>
+<Implementation><![CDATA[
+	if (opcao = 1){
+		Set obj = ##class(s01.Service.Procedimento).%New()
+		
+	}
+	
+	elseif (opcao = 2){
+		Set obj = ##class(s01.DTO.Procedimento).%New()
+	}
+	
+	elseif (opcao = 3){
+		Set obj = ##class(s01.DTO.Procedimento).%New()
+	}
+	
+	elseif (opcao = 4){
+		Set obj = ##class(s01.DTO.Procedimento).%New()
+	}
+]]></Implementation>
+</Method>
+
+<Method name="Salvar">
+</Method>
+
+<Method name="Consultar">
+</Method>
+
+<Method name="Inativar">
+</Method>
+
+<Method name="ListarTodos">
+</Method>
+</Class>
+
+
+<Class name="s01.Service.Setor">
+<Super>%RegisteredObject</Super>
+<TimeChanged>65442,41503.20529</TimeChanged>
+<TimeCreated>65442,41503.20529</TimeCreated>
+</Class>
+
+
+<Class name="s01.View.Procedimento">
+<Super>%RegisteredObject</Super>
+<TimeChanged>65443,36676.123563</TimeChanged>
+<TimeCreated>65442,41503.305204</TimeCreated>
+
+<Method name="Menu">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	Do{
+		Read !!, "	Selecione uma das opções:",
+		!, "	1. Salvar",
+		!, "	2. Consultar",
+		!, "	3. Inativar",
+		!, "	4. Listar Todos", !, opcao
+		Set obj = ##class(s01.Controller.Procedimento).%New()
+		Return obj.ChamarTratarOpcao(opcao)			
+	} While(opcao '= 0)
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="s01.View.Setor">
+<Super>%RegisteredObject</Super>
+<TimeChanged>65442,41503.406868</TimeChanged>
+<TimeCreated>65442,41503.406868</TimeCreated>
+</Class>
+
+
+<Project name="tSFCOS" LastModified="2020-03-05 10:26:33.299313">
+  <Items>
+    <ProjectItem name="s01.Controller.Procedimento" type="CLS"></ProjectItem>
+    <ProjectItem name="s01.Controller.Setor" type="CLS"></ProjectItem>
+    <ProjectItem name="s01.DAO.Procedimento" type="CLS"></ProjectItem>
+    <ProjectItem name="s01.DAO.Setor" type="CLS"></ProjectItem>
+    <ProjectItem name="s01.DTO.Procedimento" type="CLS"></ProjectItem>
+    <ProjectItem name="s01.DTO.Setor" type="CLS"></ProjectItem>
+    <ProjectItem name="s01.Persistência.Procedimento" type="CLS"></ProjectItem>
+    <ProjectItem name="s01.Persistência.Setor" type="CLS"></ProjectItem>
+    <ProjectItem name="s01.Service.Procedimento" type="CLS"></ProjectItem>
+    <ProjectItem name="s01.Service.Setor" type="CLS"></ProjectItem>
+    <ProjectItem name="s01.View.Procedimento" type="CLS"></ProjectItem>
+    <ProjectItem name="s01.View.Setor" type="CLS"></ProjectItem>
+  </Items>
+</Project>
+</Export>
