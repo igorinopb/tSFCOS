@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-05 10:27:14">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-05 10:34:58">
 <Class name="s01.Controller.Procedimento">
 <Super>%RegisteredObject</Super>
 <TimeChanged>65443,36152.475878</TimeChanged>
@@ -52,7 +52,7 @@
 
 <Class name="s01.Persistência.Procedimento">
 <Super>%Persistent</Super>
-<TimeChanged>65442,42069.464455</TimeChanged>
+<TimeChanged>65443,37968.950167</TimeChanged>
 <TimeCreated>65442,41502.902634</TimeCreated>
 
 <Property name="Mnemonico">
@@ -77,12 +77,43 @@
 <Property name="Status">
 <Type>%String</Type>
 </Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^s01.Persistência.ProcedimentoD</DataLocation>
+<DefaultData>ProcedimentoDefaultData</DefaultData>
+<IdLocation>^s01.Persistência.ProcedimentoD</IdLocation>
+<IndexLocation>^s01.Persistência.ProcedimentoI</IndexLocation>
+<StreamLocation>^s01.Persistência.ProcedimentoS</StreamLocation>
+<Data name="ProcedimentoDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Mnemonico</Value>
+</Value>
+<Value name="3">
+<Value>Descricao</Value>
+</Value>
+<Value name="4">
+<Value>Preco</Value>
+</Value>
+<Value name="5">
+<Value>Setor</Value>
+</Value>
+<Value name="6">
+<Value>Status</Value>
+</Value>
+</Data>
+</Storage>
 </Class>
 
 
 <Class name="s01.Persistência.Setor">
 <Super>%Persistent</Super>
-<TimeChanged>65442,42068.018657</TimeChanged>
+<TimeChanged>65443,37968.860963</TimeChanged>
 <TimeCreated>65442,41503.002745</TimeCreated>
 
 <Property name="Descricao">
@@ -93,6 +124,28 @@
 <Property name="Status">
 <Type>%String</Type>
 </Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^s01.Persistência.SetorD</DataLocation>
+<DefaultData>SetorDefaultData</DefaultData>
+<IdLocation>^s01.Persistência.SetorD</IdLocation>
+<IndexLocation>^s01.Persistência.SetorI</IndexLocation>
+<StreamLocation>^s01.Persistência.SetorS</StreamLocation>
+<Data name="SetorDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Descricao</Value>
+</Value>
+<Value name="3">
+<Value>Status</Value>
+</Value>
+</Data>
+</Storage>
 </Class>
 
 
@@ -173,20 +226,4 @@
 </Class>
 
 
-<Project name="tSFCOS" LastModified="2020-03-05 10:26:33.299313">
-  <Items>
-    <ProjectItem name="s01.Controller.Procedimento" type="CLS"></ProjectItem>
-    <ProjectItem name="s01.Controller.Setor" type="CLS"></ProjectItem>
-    <ProjectItem name="s01.DAO.Procedimento" type="CLS"></ProjectItem>
-    <ProjectItem name="s01.DAO.Setor" type="CLS"></ProjectItem>
-    <ProjectItem name="s01.DTO.Procedimento" type="CLS"></ProjectItem>
-    <ProjectItem name="s01.DTO.Setor" type="CLS"></ProjectItem>
-    <ProjectItem name="s01.Persistência.Procedimento" type="CLS"></ProjectItem>
-    <ProjectItem name="s01.Persistência.Setor" type="CLS"></ProjectItem>
-    <ProjectItem name="s01.Service.Procedimento" type="CLS"></ProjectItem>
-    <ProjectItem name="s01.Service.Setor" type="CLS"></ProjectItem>
-    <ProjectItem name="s01.View.Procedimento" type="CLS"></ProjectItem>
-    <ProjectItem name="s01.View.Setor" type="CLS"></ProjectItem>
-  </Items>
-</Project>
 </Export>
