@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-06 08:42:19">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-06 11:57:13">
 <Class name="s01.Controller.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65443,43286.874199</TimeChanged>
+<TimeChanged>65444,42182.821051</TimeChanged>
 <TimeCreated>65442,41502.179563</TimeCreated>
 
 <Method name="TratarOpcao">
@@ -10,12 +10,10 @@
 <Implementation><![CDATA[
 	if (opcao = 1){
 		
-		
 	}
 	
 	elseif (opcao = 2){
-		Set obj = ##class(s01.Service.Procedimento).%New()
-		
+		Do ##class(s01.View.Procedimento).ConsultarProcedimento()
 	}
 	
 	elseif (opcao = 3){
@@ -30,9 +28,10 @@
 
 <Method name="Consultar">
 <FormalSpec>id</FormalSpec>
+<ReturnType>s01.Service.Procedimento</ReturnType>
 <Implementation><![CDATA[
-	Set obj = ##class(s01.Service.Procedimento).%New()
-	Return obj.Consultar(id)
+	Set procedimentoService = ##class(s01.Service.Procedimento).%New()
+	Return procedimentoService.Consultar(id)
 ]]></Implementation>
 </Method>
 </Class>
@@ -47,17 +46,22 @@
 
 <Class name="s01.DAO.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65443,41391.86154</TimeChanged>
+<TimeChanged>65444,40823.828068</TimeChanged>
 <TimeCreated>65442,41502.496047</TimeCreated>
 
 <Method name="Consultar">
 <FormalSpec>id</FormalSpec>
 <ReturnType>s01.DTO.Procedimento</ReturnType>
 <Implementation><![CDATA[
-	Set persistencia = ##class(s01.Persistência.Procedimento).%New()
-	Set dto = ##class(s01.DTO.Procedimento).%New()
-	Set dto = persistencia.%OpenId(id)
-	Return dto
+	Set procedimentoPersistencia = ##class(s01.Persistencia.Procedimento).%New()
+	Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
+	Set procedimentoDto = procedimentoPersistencia.%OpenId(id)
+	Return procedimentoDto
+]]></Implementation>
+</Method>
+
+<Method name="ListarTodos">
+<Implementation><![CDATA[	Set consultaSql = ##class(%ResultSet).%New()
 ]]></Implementation>
 </Method>
 </Class>
@@ -112,10 +116,10 @@
 </Class>
 
 
-<Class name="s01.Persistência.Procedimento">
+<Class name="s01.Persistencia.Procedimento">
 <Super>%Persistent,%Populate</Super>
-<TimeChanged>65443,39639.514512</TimeChanged>
-<TimeCreated>65442,41502.902634</TimeCreated>
+<TimeChanged>65444,38406.170195</TimeChanged>
+<TimeCreated>65444,38336.901076</TimeCreated>
 
 <Property name="Mnemonico">
 <Type>%String</Type>
@@ -133,7 +137,7 @@
 </Property>
 
 <Property name="Setor">
-<Type>%Integer</Type>
+<Type>s01.Persistencia.Setor</Type>
 </Property>
 
 <Property name="Status">
@@ -143,12 +147,12 @@
 
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
-<DataLocation>^s01.Persistência.ProcedimentoD</DataLocation>
+<DataLocation>^s01.Persistencia.ProcedimentoD</DataLocation>
 <DefaultData>ProcedimentoDefaultData</DefaultData>
-<IdLocation>^s01.Persistência.ProcedimentoD</IdLocation>
-<IndexLocation>^s01.Persistência.ProcedimentoI</IndexLocation>
-<StreamLocation>^s01.Persistência.ProcedimentoS</StreamLocation>
-<ExtentSize>10</ExtentSize>
+<IdLocation>^s01.Persistencia.ProcedimentoD</IdLocation>
+<IndexLocation>^s01.Persistencia.ProcedimentoI</IndexLocation>
+<StreamLocation>^s01.Persistencia.ProcedimentoS</StreamLocation>
+<ExtentSize>20</ExtentSize>
 <Data name="ProcedimentoDefaultData">
 <Value name="1">
 <Value>%%CLASSNAME</Value>
@@ -175,27 +179,28 @@
 </Property>
 <Property name="%%ID">
 <Selectivity>1</Selectivity>
-<AverageFieldSize>1.6</AverageFieldSize>
+<AverageFieldSize>1.55</AverageFieldSize>
 </Property>
 <Property name="Descricao">
-<Selectivity>10.0000%</Selectivity>
-<AverageFieldSize>4.7</AverageFieldSize>
+<Selectivity>5.0000%</Selectivity>
+<AverageFieldSize>4.95</AverageFieldSize>
 </Property>
 <Property name="Mnemonico">
-<Selectivity>10.0000%</Selectivity>
-<AverageFieldSize>4.8</AverageFieldSize>
+<Selectivity>5.0000%</Selectivity>
+<AverageFieldSize>5</AverageFieldSize>
 </Property>
 <Property name="Preco">
-<Selectivity>10.0000%</Selectivity>
-<AverageFieldSize>10.7</AverageFieldSize>
+<Selectivity>5.0000%</Selectivity>
+<AverageFieldSize>10.9</AverageFieldSize>
 </Property>
 <Property name="Setor">
-<Selectivity>10.0000%</Selectivity>
-<AverageFieldSize>8.9</AverageFieldSize>
+<Selectivity>6.2500%</Selectivity>
+<OutlierSelectivity>.5:</OutlierSelectivity>
+<AverageFieldSize>.7</AverageFieldSize>
 </Property>
 <Property name="Status">
 <Selectivity>50.0000%</Selectivity>
-<AverageFieldSize>5.8</AverageFieldSize>
+<AverageFieldSize>5.9</AverageFieldSize>
 </Property>
 <SQLMap name="IDKEY">
 <BlockCount>-4</BlockCount>
@@ -204,10 +209,10 @@
 </Class>
 
 
-<Class name="s01.Persistência.Setor">
+<Class name="s01.Persistencia.Setor">
 <Super>%Persistent,%Populate</Super>
-<TimeChanged>65443,39290.319242</TimeChanged>
-<TimeCreated>65442,41503.002745</TimeCreated>
+<TimeChanged>65444,38392.08227</TimeChanged>
+<TimeCreated>65444,38334.423274</TimeCreated>
 
 <Property name="Descricao">
 <Type>%String</Type>
@@ -220,12 +225,12 @@
 
 <Storage name="Default">
 <Type>%Library.CacheStorage</Type>
-<DataLocation>^s01.Persistência.SetorD</DataLocation>
+<DataLocation>^s01.Persistencia.SetorD</DataLocation>
 <DefaultData>SetorDefaultData</DefaultData>
-<IdLocation>^s01.Persistência.SetorD</IdLocation>
-<IndexLocation>^s01.Persistência.SetorI</IndexLocation>
-<StreamLocation>^s01.Persistência.SetorS</StreamLocation>
-<ExtentSize>5</ExtentSize>
+<IdLocation>^s01.Persistencia.SetorD</IdLocation>
+<IndexLocation>^s01.Persistencia.SetorI</IndexLocation>
+<StreamLocation>^s01.Persistencia.SetorS</StreamLocation>
+<ExtentSize>20</ExtentSize>
 <Data name="SetorDefaultData">
 <Value name="1">
 <Value>%%CLASSNAME</Value>
@@ -243,15 +248,15 @@
 </Property>
 <Property name="%%ID">
 <Selectivity>1</Selectivity>
-<AverageFieldSize>1</AverageFieldSize>
+<AverageFieldSize>1.55</AverageFieldSize>
 </Property>
 <Property name="Descricao">
-<Selectivity>20.0000%</Selectivity>
-<AverageFieldSize>4.8</AverageFieldSize>
+<Selectivity>5.0000%</Selectivity>
+<AverageFieldSize>4.9</AverageFieldSize>
 </Property>
 <Property name="Status">
-<Selectivity>20.0000%</Selectivity>
-<AverageFieldSize>4.4</AverageFieldSize>
+<Selectivity>5.0000%</Selectivity>
+<AverageFieldSize>4.85</AverageFieldSize>
 </Property>
 <SQLMap name="IDKEY">
 <BlockCount>-4</BlockCount>
@@ -262,7 +267,7 @@
 
 <Class name="s01.Service.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65443,42599.68874</TimeChanged>
+<TimeChanged>65444,31722.206301</TimeChanged>
 <TimeCreated>65442,41503.103007</TimeCreated>
 
 <Method name="Salvar">
@@ -270,6 +275,7 @@
 
 <Method name="Consultar">
 <FormalSpec>id</FormalSpec>
+<ReturnType>s01.DTO.Procedimento</ReturnType>
 <Implementation><![CDATA[
 	Set procedimentoDao = ##class(s01.DAO.Procedimento).%New()
 	Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
@@ -299,31 +305,47 @@
 
 <Class name="s01.View.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65444,31129.229239</TimeChanged>
+<TimeChanged>65444,43014.709156</TimeChanged>
 <TimeCreated>65442,41503.305204</TimeCreated>
 
 <Method name="Menu">
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
 	Do{
-		Read !!, "	Selecione uma das opções:",
+		Read #!!, "	Selecione uma das opções:", !,
 		!, "	1. Salvar",
 		!, "	2. Consultar",
 		!, "	3. Inativar",
-		!, "	4. Listar Todos", !, "	", opcao
-		Set obj = ##class(s01.Controller.Procedimento).%New()
-		Return obj.TratarOpcao(opcao)			
+		!, "	4. Listar Todos",
+		!, "	0. Sair", !!, "	", opcao
+		Set procedimentoController = ##class(s01.Controller.Procedimento).%New()
+		Do procedimentoController.TratarOpcao(opcao)			
 	} While(opcao '= 0)
 ]]></Implementation>
 </Method>
 
-<Method name="Consultar">
+<Method name="ConsultarProcedimento">
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
-	Set obj = ##class(s01.Controller.Procedimento).%New()
-	Read !, "Digite o Id do Procedimento:", id
-	Return obj.Consultar(id)
+	Set procedimentoController = ##class(s01.Controller.Procedimento).%New()
+	Read !!, "	Digite o Id do Procedimento:", id
+	Set procedimentoView = procedimentoController.Consultar(id)
+	If (procedimentoView){
+		Write #
+		Write !!, "	Dados do procedimento ", id, ":", !!
+		Write "	Mnemônico:	", procedimentoView.Mnemonico, !
+		Write "	Descrição:	", procedimentoView.Descricao, !
+		Write "	Preço:		R$ ", procedimentoView.Preco, !
+		Write "	Setor:		", procedimentoView.Setor.Descricao, !
+		Write "	Status:		", procedimentoView.Status, !!
+		Read "	Pressione Enter para voltar ao menu...", controle
+		kill controle
+	}
 ]]></Implementation>
+</Method>
+
+<Method name="ListarTodos">
+<ClassMethod>1</ClassMethod>
 </Method>
 </Class>
 
