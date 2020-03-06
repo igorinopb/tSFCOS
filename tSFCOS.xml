@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-05 12:03:49">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-06 08:42:19">
 <Class name="s01.Controller.Procedimento">
 <Super>%RegisteredObject</Super>
 <TimeChanged>65443,43286.874199</TimeChanged>
@@ -299,7 +299,7 @@
 
 <Class name="s01.View.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65443,43400.932033</TimeChanged>
+<TimeChanged>65444,31129.229239</TimeChanged>
 <TimeCreated>65442,41503.305204</TimeCreated>
 
 <Method name="Menu">
@@ -310,7 +310,7 @@
 		!, "	1. Salvar",
 		!, "	2. Consultar",
 		!, "	3. Inativar",
-		!, "	4. Listar Todos", !, opcao
+		!, "	4. Listar Todos", !, "	", opcao
 		Set obj = ##class(s01.Controller.Procedimento).%New()
 		Return obj.TratarOpcao(opcao)			
 	} While(opcao '= 0)
