@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-06 11:57:13">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-09 10:05:43">
 <Class name="s01.Controller.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65444,42182.821051</TimeChanged>
+<TimeChanged>65447,33915.90622</TimeChanged>
 <TimeCreated>65442,41502.179563</TimeCreated>
 
 <Method name="TratarOpcao">
@@ -23,12 +23,15 @@
 	elseif (opcao = 4){
 		
 	}
+	elseif (opcao = 0){
+		Write #
+	}
 ]]></Implementation>
 </Method>
 
 <Method name="Consultar">
 <FormalSpec>id</FormalSpec>
-<ReturnType>s01.Service.Procedimento</ReturnType>
+<ReturnType>s01.DTO.Procedimento</ReturnType>
 <Implementation><![CDATA[
 	Set procedimentoService = ##class(s01.Service.Procedimento).%New()
 	Return procedimentoService.Consultar(id)
@@ -46,16 +49,20 @@
 
 <Class name="s01.DAO.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65444,40823.828068</TimeChanged>
+<TimeChanged>65447,32796.773205</TimeChanged>
 <TimeCreated>65442,41502.496047</TimeCreated>
 
 <Method name="Consultar">
 <FormalSpec>id</FormalSpec>
 <ReturnType>s01.DTO.Procedimento</ReturnType>
 <Implementation><![CDATA[
-	Set procedimentoPersistencia = ##class(s01.Persistencia.Procedimento).%New()
+	Set procedimentoPersistencia = ##class(s01.Persistencia.Procedimento).%OpenId(id)
 	Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
-	Set procedimentoDto = procedimentoPersistencia.%OpenId(id)
+	Set procedimentoDto.Descricao = procedimentoPersistencia.Descricao
+	Set procedimentoDto.Mnemonico = procedimentoPersistencia.Mnemonico
+	Set procedimentoDto.Preco = procedimentoPersistencia.Preco
+	Set procedimentoDto.Setor = procedimentoPersistencia.Setor
+	Set procedimentoDto.Status = procedimentoPersistencia.Status
 	Return procedimentoDto
 ]]></Implementation>
 </Method>
@@ -267,7 +274,7 @@
 
 <Class name="s01.Service.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65444,31722.206301</TimeChanged>
+<TimeChanged>65447,31814.174862</TimeChanged>
 <TimeCreated>65442,41503.103007</TimeCreated>
 
 <Method name="Salvar">
@@ -280,10 +287,6 @@
 	Set procedimentoDao = ##class(s01.DAO.Procedimento).%New()
 	Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
 	Set procedimentoDto = procedimentoDao.Consultar(id)
-	If (procedimentoDto.Status = "Inativo"){
-		Write !!, "O status do procedimento está inativo!", !
-		Return 0
-		}
 	Return procedimentoDto
 ]]></Implementation>
 </Method>
@@ -305,7 +308,7 @@
 
 <Class name="s01.View.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65444,43014.709156</TimeChanged>
+<TimeChanged>65447,34069.187306</TimeChanged>
 <TimeCreated>65442,41503.305204</TimeCreated>
 
 <Method name="Menu">
@@ -330,17 +333,16 @@
 	Set procedimentoController = ##class(s01.Controller.Procedimento).%New()
 	Read !!, "	Digite o Id do Procedimento:", id
 	Set procedimentoView = procedimentoController.Consultar(id)
-	If (procedimentoView){
 		Write #
-		Write !!, "	Dados do procedimento ", id, ":", !!
-		Write "	Mnemônico:	", procedimentoView.Mnemonico, !
-		Write "	Descrição:	", procedimentoView.Descricao, !
-		Write "	Preço:		R$ ", procedimentoView.Preco, !
-		Write "	Setor:		", procedimentoView.Setor.Descricao, !
-		Write "	Status:		", procedimentoView.Status, !!
+#;		Write !!, "	Dados do procedimento ", id, ":", !!
+#;		Write "	Mnemônico:	", procedimentoView.Mnemonico, !
+#;		Write "	Descrição:	", procedimentoView.Descricao, !
+#;		Write "	Preço:		R$ ", procedimentoView.Preco, !
+#;		Write "	Setor:		", procedimentoView.Setor.Descricao, !
+#;		Write "	Status:		", procedimentoView.Status, !!
+		ZW procedimentoView
 		Read "	Pressione Enter para voltar ao menu...", controle
 		kill controle
-	}
 ]]></Implementation>
 </Method>
 
