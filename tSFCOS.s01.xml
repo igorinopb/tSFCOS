@@ -1,56 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-17 12:02:58">
-<Class name="s01.Controller.Principal">
-<Super>%RegisteredObject</Super>
-<TimeChanged>65450,41155.132416</TimeChanged>
-<TimeCreated>65450,40853.480698</TimeCreated>
-
-<Method name="TratarOpcao">
-<FormalSpec>opcao</FormalSpec>
-<Implementation><![CDATA[
-	if (opcao = 1){
-		Do ##class(s01.View.Principal).MenuProcedimento()
-	}
-	
-	elseif (opcao = 2){
-		Do ##class(s01.View.Principal).MenuSetor()
-	}
-	elseif (opcao = 0){
-		Write #
-	}
-]]></Implementation>
-</Method>
-</Class>
-
-
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-18 16:12:44">
 <Class name="s01.Controller.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65451,37539.891792</TimeChanged>
+<TimeChanged>65456,57525.678185</TimeChanged>
 <TimeCreated>65442,41502.179563</TimeCreated>
-
-<Method name="TratarOpcao">
-<FormalSpec>opcao</FormalSpec>
-<Implementation><![CDATA[
-	if (opcao = 1){
-		Do ##class(s01.View.Procedimento).Cadastrar()
-	}
-	
-	elseif (opcao = 2){
-		Do ##class(s01.View.Procedimento).Consultar()
-	}
-	
-	elseif (opcao = 3){
-		Do ##class(s01.View.Procedimento).Inativar()
-	}
-	
-	elseif (opcao = 4){
-		Do ##class(s01.View.Procedimento).ListarTodos()
-	}
-	elseif (opcao = 0){
-		Write #
-	}
-]]></Implementation>
-</Method>
 
 <Method name="Cadastrar">
 <ClassMethod>1</ClassMethod>
@@ -96,39 +49,23 @@
 
 <Class name="s01.Controller.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65450,41729.85551</TimeChanged>
+<TimeChanged>65456,58236.456496</TimeChanged>
 <TimeCreated>65442,41502.282956</TimeCreated>
-
-<Method name="TratarOpcao">
-<FormalSpec>opcao</FormalSpec>
-<Implementation><![CDATA[
-	if (opcao = 1){
-		Do ##class(s01.View.Setor).Cadastrar()
-	}
-	
-	elseif (opcao = 2){
-		Do ##class(s01.View.Setor).Consultar()
-	}
-	
-	elseif (opcao = 3){
-		Do ##class(s01.View.Setor).Inativar()
-	}
-	
-	elseif (opcao = 4){
-		Do ##class(s01.View.Setor).ListarTodos()
-	}
-	elseif (opcao = 0){
-		Write #
-	}
-]]></Implementation>
-</Method>
 
 <Method name="Cadastrar">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>descricao,status</FormalSpec>
+<FormalSpec>setorDto</FormalSpec>
 <Implementation><![CDATA[
- 	Set setorService = ##class(s01.Service.Setor).%New()
- 	Return setorService.Cadastrar(descricao, status)
+	Try{
+	 	Set setorService = ##class(s01.Service.Setor).%New()
+	 	Return setorService.Cadastrar(setorDto)
+	}
+	Catch{
+		Read #!!, "	Erro ao cadastrar Setor",
+		!!, "	Pressione Enter para voltar ao menu... ", controle
+		Kill controle
+		Return 0
+	}
 ]]></Implementation>
 </Method>
 
@@ -240,16 +177,13 @@
 
 <Class name="s01.DAO.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65450,41968.517764</TimeChanged>
+<TimeChanged>65456,42214.94429</TimeChanged>
 <TimeCreated>65442,41502.592621</TimeCreated>
 
 <Method name="Cadastrar">
-<FormalSpec>descricao,status</FormalSpec>
+<FormalSpec>setorDto</FormalSpec>
 <Implementation><![CDATA[
  	Set setorPersistencia = ##class(s01.Persistencia.Setor).%New()
- 	Set setorDto = ##class(s01.DTO.Setor).%New()
- 	Set setorDto.Descricao = descricao
- 	Set setorDto.Status = status
  	Set setorPersistencia.Descricao = setorDto.Descricao
  	Set setorPersistencia.Status = setorDto.Status
  	Return setorPersistencia.%Save()
@@ -343,7 +277,7 @@
 
 <Class name="s01.Persistencia.Procedimento">
 <Super>%Persistent,%Populate</Super>
-<TimeChanged>65451,36199.778625</TimeChanged>
+<TimeChanged>65456,55434.106997</TimeChanged>
 <TimeCreated>65451,34458.245698</TimeCreated>
 
 <Property name="Mnemonico">
@@ -357,7 +291,7 @@
 
 <Property name="Preco">
 <Type>%Decimal</Type>
-<Parameter name="MAXVAL" value="99.99"/>
+<Parameter name="MAXVAL" value="99999999.99"/>
 <Parameter name="SCALE" value="2"/>
 </Property>
 
@@ -377,7 +311,7 @@
 <IdLocation>^s01.Persistencia.ProcedimentoD</IdLocation>
 <IndexLocation>^s01.Persistencia.ProcedimentoI</IndexLocation>
 <StreamLocation>^s01.Persistencia.ProcedimentoS</StreamLocation>
-<ExtentSize>10</ExtentSize>
+<ExtentSize>20</ExtentSize>
 <Data name="ProcedimentoDefaultData">
 <Value name="1">
 <Value>%%CLASSNAME</Value>
@@ -404,27 +338,27 @@
 </Property>
 <Property name="%%ID">
 <Selectivity>1</Selectivity>
-<AverageFieldSize>1.1</AverageFieldSize>
+<AverageFieldSize>1.55</AverageFieldSize>
 </Property>
 <Property name="Descricao">
-<Selectivity>10.0000%</Selectivity>
-<AverageFieldSize>5</AverageFieldSize>
+<Selectivity>5.0000%</Selectivity>
+<AverageFieldSize>4.95</AverageFieldSize>
 </Property>
 <Property name="Mnemonico">
-<Selectivity>10.0000%</Selectivity>
+<Selectivity>5.0000%</Selectivity>
 <AverageFieldSize>4.8</AverageFieldSize>
 </Property>
 <Property name="Preco">
-<Selectivity>10.0000%</Selectivity>
-<AverageFieldSize>4.8</AverageFieldSize>
+<Selectivity>5.0000%</Selectivity>
+<AverageFieldSize>4.9</AverageFieldSize>
 </Property>
 <Property name="Setor">
-<Selectivity>12.5000%</Selectivity>
-<AverageFieldSize>1.1</AverageFieldSize>
+<Selectivity>7.6923%</Selectivity>
+<AverageFieldSize>1.5</AverageFieldSize>
 </Property>
 <Property name="Status">
 <Selectivity>50.0000%</Selectivity>
-<AverageFieldSize>6</AverageFieldSize>
+<AverageFieldSize>5.9</AverageFieldSize>
 </Property>
 <SQLMap name="IDKEY">
 <BlockCount>-4</BlockCount>
@@ -438,7 +372,7 @@
 
 <Class name="s01.Persistencia.Setor">
 <Super>%Persistent,%Populate</Super>
-<TimeChanged>65451,36112.667946</TimeChanged>
+<TimeChanged>65456,55340.564973</TimeChanged>
 <TimeCreated>65451,34416.461123</TimeCreated>
 
 <Property name="Descricao">
@@ -458,7 +392,7 @@
 <IdLocation>^s01.Persistencia.SetorD</IdLocation>
 <IndexLocation>^s01.Persistencia.SetorI</IndexLocation>
 <StreamLocation>^s01.Persistencia.SetorS</StreamLocation>
-<ExtentSize>10</ExtentSize>
+<ExtentSize>20</ExtentSize>
 <Data name="SetorDefaultData">
 <Value name="1">
 <Value>%%CLASSNAME</Value>
@@ -476,15 +410,15 @@
 </Property>
 <Property name="%%ID">
 <Selectivity>1</Selectivity>
-<AverageFieldSize>1.1</AverageFieldSize>
+<AverageFieldSize>1.55</AverageFieldSize>
 </Property>
 <Property name="Descricao">
-<Selectivity>10.0000%</Selectivity>
-<AverageFieldSize>4.9</AverageFieldSize>
+<Selectivity>5.0000%</Selectivity>
+<AverageFieldSize>4.75</AverageFieldSize>
 </Property>
 <Property name="Status">
 <Selectivity>50.0000%</Selectivity>
-<AverageFieldSize>6.2</AverageFieldSize>
+<AverageFieldSize>5.9</AverageFieldSize>
 </Property>
 <SQLMap name="IDKEY">
 <BlockCount>-4</BlockCount>
@@ -495,13 +429,13 @@
 
 <Class name="s01.Service.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65451,42901.618818</TimeChanged>
+<TimeChanged>65456,58287.523548</TimeChanged>
 <TimeCreated>65442,41503.103007</TimeCreated>
 
 <Method name="VerificaSetor">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>idSetor</FormalSpec>
-<Implementation><![CDATA[		Set setor = ##class(s01.Persistencia.Setor).%OpenId(idSetor)
+<Implementation><![CDATA[	Set setor = ##class(s01.Persistencia.Setor).%ExistsId(idSetor)
 ]]></Implementation>
 </Method>
 
@@ -538,13 +472,13 @@
 <FormalSpec>id</FormalSpec>
 <ReturnType>s01.DTO.Procedimento</ReturnType>
 <Implementation><![CDATA[
-	if ($ISOBJECT(##class(s01.Persistencia.Procedimento).%OpenId(id))){
+	if (##class(s01.Persistencia.Procedimento).%ExistsId(id)){
 		Set procedimentoDao = ##class(s01.DAO.Procedimento).%New()
 		Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
 		Set procedimentoDto = procedimentoDao.Consultar(id)
 		Return procedimentoDto
 	}
-	else{
+	Else{
 		Return 0
 	}
 ]]></Implementation>
@@ -553,11 +487,11 @@
 <Method name="Inativar">
 <FormalSpec>id</FormalSpec>
 <Implementation><![CDATA[
-	if ($ISOBJECT(##class(s01.Persistencia.Procedimento).%OpenId(id))){
+	If (##class(s01.Persistencia.Procedimento).%ExistsId(id)){
 		Set procedimentoDao = ##class(s01.DAO.Procedimento).%New()
 		Do procedimentoDao.Inativar(id)
 	}
-	else{
+	Else{
 		Return 0
 	}
 ]]></Implementation>
@@ -577,18 +511,19 @@
 
 <Class name="s01.Service.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65451,37301.235865</TimeChanged>
+<TimeChanged>65456,56882.416408</TimeChanged>
 <TimeCreated>65442,41503.20529</TimeCreated>
 
 <Method name="Cadastrar">
-<FormalSpec>descricao,status</FormalSpec>
+<FormalSpec>setorDto</FormalSpec>
 <Implementation><![CDATA[
- 	Set setorDao = ##class(s01.DAO.Setor).%New()
- #;	Elseif (status '= existeNoBanco){
- #;		Return 0
- #;		// NA VIEW --> Write !!, "	Esse status não existe no banco"
- #;	}
- 	Return setorDao.Cadastrar(descricao, status)
+	If ((setorDto.Status = "Ativo") || (setorDto.Status = "Inativo")){
+		Set setorDao = ##class(s01.DAO.Setor).%New()
+		Return setorDto.Cadastrar(setorDto)
+	}
+ 	Else{
+	 	THROW ##class(%Exception.General).%New("	O status não é válido!!")
+ 	}
 ]]></Implementation>
 </Method>
 
@@ -596,13 +531,13 @@
 <FormalSpec>id</FormalSpec>
 <ReturnType>s01.DTO.Setor</ReturnType>
 <Implementation><![CDATA[
-	if ($ISOBJECT(##class(s01.Persistencia.Setor).%OpenId(id))){
+	If (##class(s01.Persistencia.Setor).%ExistsId(id)){
 		Set setorDao = ##class(s01.DAO.Setor).%New()
 		Set setorDto = ##class(s01.DTO.Setor).%New()
 		Set setorDto = setorDao.Consultar(id)
 		Return setorDto
 	}
-	else{
+	Else{	
 		Return 0
 	}
 ]]></Implementation>
@@ -611,11 +546,11 @@
 <Method name="Inativar">
 <FormalSpec>id</FormalSpec>
 <Implementation><![CDATA[
-	if ($ISOBJECT(##class(s01.Persistencia.Setor).%OpenId(id))){
+	If (##class(s01.Persistencia.Setor).%ExistsId(id)){
 		Set setorDao = ##class(s01.DAO.Setor).%New()
 		Do setorDao.Inativar(id)
 	}
-	else{
+	Else{
 		Return 0
 	}
 ]]></Implementation>
@@ -635,7 +570,7 @@
 
 <Class name="s01.View.Principal">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65454,41861.602127</TimeChanged>
+<TimeChanged>65456,57994.995625</TimeChanged>
 <TimeCreated>65450,40853.608963</TimeCreated>
 
 <Method name="Menu">
@@ -646,21 +581,37 @@
 		!, "	1. Procedimento",
 		!, "	2. Setor",
 		!!, "	0. Sair", !!, "	Digite a opção desejada: ", opcao
-		Set principalController = ##class(s01.Controller.Principal).%New()
-		Do principalController.TratarOpcao(opcao)
+		Do ..TratarOpcao(opcao)
 	} While(opcao '= 0)
+]]></Implementation>
+</Method>
+
+<Method name="TratarOpcao">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>opcao</FormalSpec>
+<Implementation><![CDATA[
+	If (opcao = 1){
+		Do ..MenuProcedimento()
+	}
+	
+	ElseIf (opcao = 2){
+		Do ..MenuSetor()
+	}
+	ElseIf (opcao = 0){
+		Write #
+	}
 ]]></Implementation>
 </Method>
 
 <Method name="MenuProcedimento">
 <ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[	do ##class(s01.View.Procedimento).Menu()
+<Implementation><![CDATA[	Do ##class(s01.View.Procedimento).Menu()
 ]]></Implementation>
 </Method>
 
 <Method name="MenuSetor">
 <ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[	do ##class(s01.View.Setor).Menu()
+<Implementation><![CDATA[	Do ##class(s01.View.Setor).Menu()
 ]]></Implementation>
 </Method>
 </Class>
@@ -668,7 +619,7 @@
 
 <Class name="s01.View.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65454,41848.257583</TimeChanged>
+<TimeChanged>65456,58124.903363</TimeChanged>
 <TimeCreated>65442,41503.305204</TimeCreated>
 
 <Method name="Menu">
@@ -683,8 +634,33 @@
 		!, "	4. Listar Todos",
 		!!, "	0. Sair", !!, "	Digite a opção desejada: ", opcao
 		Set procedimentoController = ##class(s01.Controller.Procedimento).%New()
-		Do procedimentoController.TratarOpcao(opcao)
-	} While(opcao '= 0)
+		Do ..TratarOpcao(opcao)
+	} While(opcao '= "0")
+]]></Implementation>
+</Method>
+
+<Method name="TratarOpcao">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>opcao</FormalSpec>
+<Implementation><![CDATA[
+	If (opcao = 1){
+		Do ..Cadastrar()
+	}
+	
+	ElseIf (opcao = 2){
+		Do ..Consultar()
+	}
+	
+	ElseIf (opcao = 3){
+		Do ..Inativar()
+	}
+	
+	ElseIf (opcao = 4){
+		Do ..ListarTodos()
+	}
+	ElseIf (opcao = 0){
+		Write #
+	}
 ]]></Implementation>
 </Method>
 
@@ -709,13 +685,14 @@
 		}
 	 	Read !!, "	Digite o status: ", status
 	 	Return procedimentoController.Cadastrar(descricao, mnemonico, preco, idSetor, status)
- 	}Catch erro{
+ 	}
+ 	Catch erro{
 	 	Write #!!, "	Houve um problema ao tentar cadastrar o procedimento!"
 		Write !, "	Código do erro: ",erro.Code
 		Write !, "	Nome do erro: ",erro.Name
 		Write !, "	Informação sobre o erro: ",erro.Data
 		Read !!, "	Pressione Enter para voltar ao menu... ", controle
-		kill controle
+		Kill controle
 	 }
 ]]></Implementation>
 </Method>
@@ -735,12 +712,12 @@
 		Write !, "	Setor:		", procedimentoView.Setor.Descricao
 		Write !, "	Status:		", procedimentoView.Status
 	}
-	else{
+	Else{
 		Write #
 		Write !, "	'", id, "' não é um id válido!"
 		}
 	Read !!, "	Pressione Enter para voltar ao menu... ", controle
-	kill controle
+	Kill controle
 ]]></Implementation>
 </Method>
 
@@ -759,17 +736,17 @@
 			Write "	Preço:		R$ ", procedimentoView.Preco, !
 			Write "	Setor:		", procedimentoView.Setor.Descricao, !
 		}
-		else{
+		Else{
 			Write #
 			Write !!, "	O procedimento já está Inativo!!"
 		}
 	}
-	else{
+	Else{
 		Write #
 		Write !, "	'", id, "' não é um id válido!"
 	}
 	Read !!, "	Pressione Enter para voltar ao menu... ", controle
-	kill controle
+	Kill controle
 ]]></Implementation>
 </Method>
 
@@ -783,37 +760,43 @@
 		Write #
 		Write !!!, "			 Lista de procedimentos:"
 		Write !!!!, "	Dados do procedimento ", i, ":"
-		if ($ISOBJECT(##class(s01.Persistencia.Procedimento).%OpenId(i+1))){
+		If (##class(s01.Persistencia.Procedimento).%ExistsId(i+1)){
 			Write "	Dados do procedimento ", i+1, ":"
 		}
+		
 		Write !!, "	Mnemônico:	", listaDeProcedimentos.GetAt(i).Mnemonico
-		if ($ISOBJECT(##class(s01.Persistencia.Procedimento).%OpenId(i+1))){
+		If (##class(s01.Persistencia.Procedimento).%ExistsId(i+1)){
 			Write "		Mnemônico:	", listaDeProcedimentos.GetAt(i+1).Mnemonico
 		}
+		
 		Write !, "	Descrição:	", listaDeProcedimentos.GetAt(i).Descricao
-		if ($ISOBJECT(##class(s01.Persistencia.Procedimento).%OpenId(i+1))){
+		If (##class(s01.Persistencia.Procedimento).%ExistsId(i+1)){
 			Write "		Descrição:	", listaDeProcedimentos.GetAt(i+1).Descricao
 		}
+		
 		Write !, "	Preço:		R$ ", listaDeProcedimentos.GetAt(i).Preco
-		if ($ISOBJECT(##class(s01.Persistencia.Procedimento).%OpenId(i+1))){
+		If (##class(s01.Persistencia.Procedimento).%ExistsId(i+1)){
 			Write "    	", "Preço:		R$ ", listaDeProcedimentos.GetAt(i+1).Preco
 		}
+		
 		Write !, "	Setor:		", listaDeProcedimentos.GetAt(i).Setor.Descricao
-		if ($ISOBJECT(##class(s01.Persistencia.Procedimento).%OpenId(i+1))){
+		If (##class(s01.Persistencia.Procedimento).%ExistsId(i+1)){
 			Write "		Setor:		", listaDeProcedimentos.GetAt(i+1).Setor.Descricao
 		}
+		
 		Write !, "	Status:		", listaDeProcedimentos.GetAt(i).Status
-		if ($ISOBJECT(##class(s01.Persistencia.Procedimento).%OpenId(i+1))){
+		If (##class(s01.Persistencia.Procedimento).%ExistsId(i+1)){
 			Write "		Status:		", listaDeProcedimentos.GetAt(i+1).Status
 		}
+		
 		Write !!!, "			     Página ", $NORMALIZE((i/2), 0), " de ", $NORMALIZE((listaDeProcedimentos.Count()/2), 0)
 		If (i+1<listaDeProcedimentos.Count()){
 			Read !!!!!, "	Pressione Enter para ir a próxima página ", controle
-			kill controle
+			Kill controle
 		}
 	}
 	Read !!!!!, "	Pressione Enter para voltar ao menu... ", controle
-	kill controle
+	Kill controle
 ]]></Implementation>
 </Method>
 </Class>
@@ -821,7 +804,7 @@
 
 <Class name="s01.View.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65454,41841.139788</TimeChanged>
+<TimeChanged>65456,58197.507053</TimeChanged>
 <TimeCreated>65442,41503.406868</TimeCreated>
 
 <Method name="Menu">
@@ -836,8 +819,33 @@
 		!, "	4. Listar Todos",
 		!!, "	0. Sair", !!, "	Digite a opção desejada: ", opcao
 		Set setorController = ##class(s01.Controller.Setor).%New()
-		Do setorController.TratarOpcao(opcao)
+		Do ..TratarOpcao(opcao)
 	} While(opcao '= 0)
+]]></Implementation>
+</Method>
+
+<Method name="TratarOpcao">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>opcao</FormalSpec>
+<Implementation><![CDATA[
+	If (opcao = 1){
+		Do ..Cadastrar()
+	}
+	
+	ElseIf (opcao = 2){
+		Do ..Consultar()
+	}
+	
+	ElseIf (opcao = 3){
+		Do ..Inativar()
+	}
+	
+	ElseIf (opcao = 4){
+		Do ..ListarTodos()
+	}
+	ElseIf (opcao = 0){
+		Write #
+	}
 ]]></Implementation>
 </Method>
 
@@ -848,7 +856,10 @@
  	Write #!!, "			 Cadastro de setor:"
  	Read !!, "	Digite a descrição: ", descricao
 	Read !!, "	Digite o status: ", status
- 	Return setorController.Cadastrar(descricao, status)
+	Set setorDto = ##class(s01.DTO.Setor).%New()
+ 	Set setorDto.Descricao = descricao
+ 	Set setorDto.Status = status
+ 	Return setorController.Cadastrar(setorDto)
 ]]></Implementation>
 </Method>
 
@@ -864,12 +875,12 @@
 		Write !, "	Descrição:	", setorView.Descricao
 		Write !, "	Status:		", setorView.Status
 	}
-	else{
+	Else{
 		Write #
 		Write !, "	'", id, "' não é um id válido!"
 		}
 	Read !!, "	Pressione Enter para voltar ao menu... ", controle
-	kill controle
+	Kill controle
 ]]></Implementation>
 </Method>
 
@@ -885,17 +896,17 @@
 			Write #!!, "	Dados do setor ", id, " inativado:", !!
 			Write "	Descrição:	", setorView.Descricao, !
 		}
-		else{
+		Else{
 			Write #
 			Write !!, "	O setor já está Inativo!!"
 		}
 	}
-	else{
+	Else{
 		Write #
 		Write !, "	'", id, "' não é um id válido!"
 	}
 	Read !!, "	Pressione Enter para voltar ao menu... ", controle
-	kill controle
+	Kill controle
 ]]></Implementation>
 </Method>
 
@@ -909,25 +920,25 @@
 		Write #
 		Write !!!, "			 Lista de setores:"
 		Write !!!!, "	Dados do setor ", i, ":"
-		if ($ISOBJECT(##class(s01.Persistencia.Setor).%OpenId(i+1))){
+		If (##class(s01.Persistencia.Setor).%ExistsId(i+1)){
 			Write "		Dados do setor ", i+1, ":"
 		}
 		Write !!!, "	Descrição:	", listaDeSetores.GetAt(i).Descricao
-		if ($ISOBJECT(##class(s01.Persistencia.Setor).%OpenId(i+1))){
+		If (##class(s01.Persistencia.Setor).%ExistsId(i+1)){
 			Write "		Descrição:	", listaDeSetores.GetAt(i+1).Descricao
 		}
 		Write !, "	Status:		", listaDeSetores.GetAt(i).Status
-		if ($ISOBJECT(##class(s01.Persistencia.Setor).%OpenId(i+1))){
+		If (##class(s01.Persistencia.Setor).%ExistsId(i+1)){
 			Write "		Status:		", listaDeSetores.GetAt(i+1).Status
 		}
 		Write !!!, "			     Página ", $NORMALIZE((i/2), 0), " de ", $NORMALIZE((listaDeSetores.Count()/2), 0)
 		If (i+1<listaDeSetores.Count()){
 			Read !!!!!, "	Pressione Enter para ir a próxima página ", controle
-			kill controle
+			Kill controle
 		}
 	}
 	Read !!!!!, "	Pressione Enter para voltar ao menu... ", controle
-	kill controle
+	Kill controle
 ]]></Implementation>
 </Method>
 </Class>

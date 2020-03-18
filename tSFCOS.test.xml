@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-17 12:03:16">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-18 16:12:55">
 <Class name="test.framework.CExecuteTests">
 <Super>%RegisteredObject</Super>
 <TimeChanged>65455,32453</TimeChanged>
@@ -9213,7 +9213,7 @@ Wrapper for %Monitor.System.LineByLine:Result to present metrics in a format mor
 
 <Class name="test.unittest.Service.ImpostoEhRouboTests">
 <Super>test.unittest.UnitTestAbstract</Super>
-<TimeChanged>65455,40790.650661</TimeChanged>
+<TimeChanged>65456,53594.374599</TimeChanged>
 <TimeCreated>65455,32614.709614</TimeCreated>
 
 <Property name="Service">
@@ -9330,6 +9330,17 @@ Wrapper for %Monitor.System.LineByLine:Result to present metrics in a format mor
 	
 	Set imposto = ..Service.CalculaIPI(100001)
 	Do $$$AssertEquals(imposto, 319003.19)
+	
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestCalculaIPIInvalido">
+<Implementation><![CDATA[
+	Do ..ReplayAllMocks()
+	
+	Set imposto = ..Service.CalculaIPI("Teste valor Inválido")
+	Do $$$AssertEquals(imposto, 0)
 	
 	Do ..VerifyAllMocks()
 ]]></Implementation>
@@ -9674,7 +9685,92 @@ Adicionado para compatibilidade na migração da abstração</Description>
 
 <Class name="test.unittest.s01.Service.SetorTests">
 <Super>test.unittest.UnitTestAbstract</Super>
-<TimeChanged>65455,43250.766274</TimeChanged>
+<TimeChanged>65456,56933.516813</TimeChanged>
 <TimeCreated>65455,43250.766274</TimeCreated>
+
+<Property name="Service">
+<Type>s01.Service.Setor</Type>
+<Private>1</Private>
+</Property>
+
+<Property name="ServiceMock">
+<Type>s01.Service.Setor</Type>
+<Private>1</Private>
+</Property>
+
+<Method name="InicializarMocks">
+<Implementation><![CDATA[	Return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="InicializarService">
+<Implementation><![CDATA[
+	Set ..Service = ##class(s01.Service.Setor).%New(..InicializarMocks())
+	Return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="TestCadastrarAtivo">
+<Implementation><![CDATA[
+	Do ..ReplayAllMocks()
+	
+	Try{
+		Set setorDto = ##class(s01.DTO.Setor).%New()
+ 		Set setorDto.Descricao = "Descricao"
+ 		Set setorDto.Status = "Ativo"
+ 		
+		Set setorDao = ##class(s01.DAO.Setor).%New()
+		
+		Return setorDao.Cadastrar(setorDto)
+	}
+	Catch erro{
+		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
+	}
+	
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestCadastrarInativo">
+<Implementation><![CDATA[
+	Do ..ReplayAllMocks()
+	
+	Try{
+		Set setorDto = ##class(s01.DTO.Setor).%New()
+ 		Set setorDto.Descricao = "Descricao"
+ 		Set setorDto.Status = "Inativo"
+ 		
+		Set setorDao = ##class(s01.DAO.Setor).%New()
+		
+		Return setorDao.Cadastrar(setorDto)
+	}
+	Catch erro{
+		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
+	}
+	
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestCadastrarInvalido">
+<Implementation><![CDATA[
+	Do ..ReplayAllMocks()
+	
+	Try{
+		Set setorDto = ##class(s01.DTO.Setor).%New()
+ 		Set setorDto.Descricao = "Descricao"
+ 		Set setorDto.Status = "Teste"
+ 		
+		Set setorDao = ##class(s01.DAO.Setor).%New()
+		
+		Return setorDao.Cadastrar(setorDto)
+	}
+	Catch erro{
+		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
+	}
+	
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
 </Class>
 </Export>
