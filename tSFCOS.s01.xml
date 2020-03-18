@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-18 16:12:44">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-18 17:04:24">
 <Class name="s01.Controller.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,57525.678185</TimeChanged>
+<TimeChanged>65456,59917.135307</TimeChanged>
 <TimeCreated>65442,41502.179563</TimeCreated>
 
 <Method name="Cadastrar">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>descricao,mnemonico,preco,idSetor,status</FormalSpec>
+<FormalSpec>procedimentoDto</FormalSpec>
 <Implementation><![CDATA[
  	Set procedimentoService = ##class(s01.Service.Procedimento).%New()
- 	Do procedimentoService.VerificaSetor(idSetor)
- 	Return procedimentoService.Cadastrar(descricao, mnemonico, preco, idSetor, status)
+ 	Do procedimentoService.VerificaSetor(procedimentoDto.idSetor)
+ 	
+ 	Return procedimentoService.Cadastrar(procedimentoDto)
 ]]></Implementation>
 </Method>
 
@@ -21,6 +22,7 @@
 <ReturnType>s01.DTO.Procedimento</ReturnType>
 <Implementation><![CDATA[
 	Set procedimentoService = ##class(s01.Service.Procedimento).%New()
+	
 	Return procedimentoService.Consultar(id)
 ]]></Implementation>
 </Method>
@@ -41,6 +43,7 @@
 	Set procedimentoService = ##class(s01.Service.Procedimento).%New()
 	Set listaDeProcedimentos = ##class(%Library.ListOfObjects).%New()
 	Set listaDeProcedimentos = procedimentoService.ListarTodos()
+	
 	Return listaDeProcedimentos
 ]]></Implementation>
 </Method>
@@ -49,23 +52,15 @@
 
 <Class name="s01.Controller.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,58236.456496</TimeChanged>
+<TimeChanged>65456,61303.789431</TimeChanged>
 <TimeCreated>65442,41502.282956</TimeCreated>
 
 <Method name="Cadastrar">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>setorDto</FormalSpec>
 <Implementation><![CDATA[
-	Try{
 	 	Set setorService = ##class(s01.Service.Setor).%New()
 	 	Return setorService.Cadastrar(setorDto)
-	}
-	Catch{
-		Read #!!, "	Erro ao cadastrar Setor",
-		!!, "	Pressione Enter para voltar ao menu... ", controle
-		Kill controle
-		Return 0
-	}
 ]]></Implementation>
 </Method>
 
@@ -103,25 +98,19 @@
 
 <Class name="s01.DAO.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65450,43741.859967</TimeChanged>
+<TimeChanged>65456,59870.472035</TimeChanged>
 <TimeCreated>65442,41502.496047</TimeCreated>
 
 <Method name="Cadastrar">
-<FormalSpec>descricao,mnemonico,preco,idSetor,status</FormalSpec>
+<FormalSpec>procedimentoDto</FormalSpec>
 <Implementation><![CDATA[
  	Set procedimentoPersistencia = ##class(s01.Persistencia.Procedimento).%New()
- 	Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
- 	Set setorDto = ##class(s01.DTO.Setor).%New()
- 	Set procedimentoDto.Descricao = descricao
- 	Set procedimentoDto.Mnemonico = mnemonico
- 	Set procedimentoDto.Preco = preco
- 	Set procedimentoDto.Status = status
-	Set procedimentoDto.Setor = idSetor
  	Set procedimentoPersistencia.Descricao = procedimentoDto.Descricao
  	Set procedimentoPersistencia.Mnemonico = procedimentoDto.Mnemonico
  	Set procedimentoPersistencia.Preco = procedimentoDto.Preco
- 	Do procedimentoPersistencia.SetorSetObjectId(idSetor)
+ 	Do procedimentoPersistencia.SetorSetObjectId(procedimentoDto.idSetor)
  	Set procedimentoPersistencia.Status = procedimentoDto.Status
+ 	
  	Return procedimentoPersistencia.%Save()
 ]]></Implementation>
 </Method>
@@ -137,6 +126,7 @@
 	Set procedimentoDto.Preco = procedimentoPersistencia.Preco
 	Set procedimentoDto.Setor = procedimentoPersistencia.Setor
 	Set procedimentoDto.Status = procedimentoPersistencia.Status
+	
 	Return procedimentoDto
 ]]></Implementation>
 </Method>
@@ -169,6 +159,7 @@
 		Set procedimentoDto.Status = procedimentoPersistencia.Status
 		Do listaDeProcedimentos.Insert(procedimentoDto)
 	}
+	
 	Return listaDeProcedimentos
 ]]></Implementation>
 </Method>
@@ -277,7 +268,7 @@
 
 <Class name="s01.Persistencia.Procedimento">
 <Super>%Persistent,%Populate</Super>
-<TimeChanged>65456,55434.106997</TimeChanged>
+<TimeChanged>65456,59290.430055</TimeChanged>
 <TimeCreated>65451,34458.245698</TimeCreated>
 
 <Property name="Mnemonico">
@@ -342,19 +333,19 @@
 </Property>
 <Property name="Descricao">
 <Selectivity>5.0000%</Selectivity>
-<AverageFieldSize>4.95</AverageFieldSize>
+<AverageFieldSize>4.85</AverageFieldSize>
 </Property>
 <Property name="Mnemonico">
 <Selectivity>5.0000%</Selectivity>
-<AverageFieldSize>4.8</AverageFieldSize>
+<AverageFieldSize>4.85</AverageFieldSize>
 </Property>
 <Property name="Preco">
 <Selectivity>5.0000%</Selectivity>
-<AverageFieldSize>4.9</AverageFieldSize>
+<AverageFieldSize>4.8</AverageFieldSize>
 </Property>
 <Property name="Setor">
-<Selectivity>7.6923%</Selectivity>
-<AverageFieldSize>1.5</AverageFieldSize>
+<Selectivity>10.0000%</Selectivity>
+<AverageFieldSize>1.65</AverageFieldSize>
 </Property>
 <Property name="Status">
 <Selectivity>50.0000%</Selectivity>
@@ -372,7 +363,7 @@
 
 <Class name="s01.Persistencia.Setor">
 <Super>%Persistent,%Populate</Super>
-<TimeChanged>65456,55340.564973</TimeChanged>
+<TimeChanged>65456,59205.259227</TimeChanged>
 <TimeCreated>65451,34416.461123</TimeCreated>
 
 <Property name="Descricao">
@@ -414,11 +405,11 @@
 </Property>
 <Property name="Descricao">
 <Selectivity>5.0000%</Selectivity>
-<AverageFieldSize>4.75</AverageFieldSize>
+<AverageFieldSize>4.85</AverageFieldSize>
 </Property>
 <Property name="Status">
 <Selectivity>50.0000%</Selectivity>
-<AverageFieldSize>5.9</AverageFieldSize>
+<AverageFieldSize>6</AverageFieldSize>
 </Property>
 <SQLMap name="IDKEY">
 <BlockCount>-4</BlockCount>
@@ -429,7 +420,7 @@
 
 <Class name="s01.Service.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,58287.523548</TimeChanged>
+<TimeChanged>65456,59917.569072</TimeChanged>
 <TimeCreated>65442,41503.103007</TimeCreated>
 
 <Method name="VerificaSetor">
@@ -440,7 +431,7 @@
 </Method>
 
 <Method name="Cadastrar">
-<FormalSpec>descricao,mnemonico,preco,idSetor,status</FormalSpec>
+<FormalSpec>procedimentoDto</FormalSpec>
 <Implementation><![CDATA[
  	Set procedimentoDao = ##class(s01.DAO.Procedimento).%New() 
 
@@ -464,7 +455,8 @@
  #;		Return 0
  #;		// NA VIEW --> Write !!, "	Esse status não existe no banco"
  #;	}
-	Return procedimentoDao.Cadastrar(descricao, mnemonico, preco, idSetor, status)
+ 
+	Return procedimentoDao.Cadastrar(procedimentoDto)
 ]]></Implementation>
 </Method>
 
@@ -503,6 +495,7 @@
 	Set procedimentoDao = ##class(s01.DAO.Procedimento).%New()
 	Set listaDeProcedimentos = ##class(%Library.ListOfObjects).%New()
 	Set listaDeProcedimentos = procedimentoDao.ListarTodos()
+	
 	Return listaDeProcedimentos
 ]]></Implementation>
 </Method>
@@ -511,7 +504,7 @@
 
 <Class name="s01.Service.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,56882.416408</TimeChanged>
+<TimeChanged>65456,58717.485319</TimeChanged>
 <TimeCreated>65442,41503.20529</TimeCreated>
 
 <Method name="Cadastrar">
@@ -519,7 +512,7 @@
 <Implementation><![CDATA[
 	If ((setorDto.Status = "Ativo") || (setorDto.Status = "Inativo")){
 		Set setorDao = ##class(s01.DAO.Setor).%New()
-		Return setorDto.Cadastrar(setorDto)
+		Return setorDao.Cadastrar(setorDto)
 	}
  	Else{
 	 	THROW ##class(%Exception.General).%New("	O status não é válido!!")
@@ -570,7 +563,7 @@
 
 <Class name="s01.View.Principal">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,57994.995625</TimeChanged>
+<TimeChanged>65456,60098.962855</TimeChanged>
 <TimeCreated>65450,40853.608963</TimeCreated>
 
 <Method name="Menu">
@@ -614,12 +607,20 @@
 <Implementation><![CDATA[	Do ##class(s01.View.Setor).Menu()
 ]]></Implementation>
 </Method>
+
+<Method name="ContinuarComEnter">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	Read !!, "	Pressione Enter para voltar ao menu... ", controle
+	Kill controle
+]]></Implementation>
+</Method>
 </Class>
 
 
 <Class name="s01.View.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,58124.903363</TimeChanged>
+<TimeChanged>65456,61383.76768</TimeChanged>
 <TimeCreated>65442,41503.305204</TimeCreated>
 
 <Method name="Menu">
@@ -683,16 +684,23 @@
 	 	If (setor.Status '= "Ativo"){
 			THROW ##class(%Exception.General).%New("ID de setor inválido","256",,"Esse setor está inativo!")
 		}
-	 	Read !!, "	Digite o status: ", status
-	 	Return procedimentoController.Cadastrar(descricao, mnemonico, preco, idSetor, status)
+	 	Read !!, "	Digite o status(Ativo ou Inativo): ", status
+	 	
+	 	Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
+	 	Set procedimentoDto.Descricao = descricao
+ 		Set procedimentoDto.Mnemonico = mnemonico
+ 		Set procedimentoDto.Preco = preco
+ 		Set procedimentoDto.Status = status
+		Set procedimentoDto.Setor = idSetor
+		
+	 	Do procedimentoController.Cadastrar(procedimentoDto)
  	}
  	Catch erro{
 	 	Write #!!, "	Houve um problema ao tentar cadastrar o procedimento!"
 		Write !, "	Código do erro: ",erro.Code
 		Write !, "	Nome do erro: ",erro.Name
 		Write !, "	Informação sobre o erro: ",erro.Data
-		Read !!, "	Pressione Enter para voltar ao menu... ", controle
-		Kill controle
+		Do ##class(s01.View.Principal).ContinuarComEnter()
 	 }
 ]]></Implementation>
 </Method>
@@ -716,8 +724,7 @@
 		Write #
 		Write !, "	'", id, "' não é um id válido!"
 		}
-	Read !!, "	Pressione Enter para voltar ao menu... ", controle
-	Kill controle
+	Do ##class(s01.View.Principal).ContinuarComEnter()
 ]]></Implementation>
 </Method>
 
@@ -804,7 +811,7 @@
 
 <Class name="s01.View.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,58197.507053</TimeChanged>
+<TimeChanged>65456,61360.162782</TimeChanged>
 <TimeCreated>65442,41503.406868</TimeCreated>
 
 <Method name="Menu">
@@ -852,14 +859,21 @@
 <Method name="Cadastrar">
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
- 	Set setorController = ##class(s01.Controller.Setor).%New()
- 	Write #!!, "			 Cadastro de setor:"
- 	Read !!, "	Digite a descrição: ", descricao
-	Read !!, "	Digite o status: ", status
-	Set setorDto = ##class(s01.DTO.Setor).%New()
- 	Set setorDto.Descricao = descricao
- 	Set setorDto.Status = status
- 	Return setorController.Cadastrar(setorDto)
+	Try{
+	 	Set setorController = ##class(s01.Controller.Setor).%New()
+	 	Write #!!, "			 Cadastro de setor:"
+	 	Read !!, "	Digite a descrição: ", descricao
+		Read !!, "	Digite o status (Ativo ou Inativo): ", status
+		Set setorDto = ##class(s01.DTO.Setor).%New()
+	 	Set setorDto.Descricao = descricao
+	 	Set setorDto.Status = status
+	 	Do setorController.Cadastrar(setorDto)
+	 	Write !!, "	Setor cadastrado com sucesso!!"
+	}
+	Catch{
+		Write #!!, "	Erro ao cadastrar Setor"
+	}
+ 	Do ##class(s01.View.Principal).ContinuarComEnter()
 ]]></Implementation>
 </Method>
 
@@ -879,8 +893,7 @@
 		Write #
 		Write !, "	'", id, "' não é um id válido!"
 		}
-	Read !!, "	Pressione Enter para voltar ao menu... ", controle
-	Kill controle
+	Do ##class(s01.View.Principal).ContinuarComEnter()
 ]]></Implementation>
 </Method>
 
@@ -905,8 +918,7 @@
 		Write #
 		Write !, "	'", id, "' não é um id válido!"
 	}
-	Read !!, "	Pressione Enter para voltar ao menu... ", controle
-	Kill controle
+	Do ##class(s01.View.Principal).ContinuarComEnter()
 ]]></Implementation>
 </Method>
 
@@ -933,12 +945,10 @@
 		}
 		Write !!!, "			     Página ", $NORMALIZE((i/2), 0), " de ", $NORMALIZE((listaDeSetores.Count()/2), 0)
 		If (i+1<listaDeSetores.Count()){
-			Read !!!!!, "	Pressione Enter para ir a próxima página ", controle
-			Kill controle
+			Do ##class(s01.View.Principal).ContinuarComEnter()
 		}
 	}
-	Read !!!!!, "	Pressione Enter para voltar ao menu... ", controle
-	Kill controle
+	Do ##class(s01.View.Principal).ContinuarComEnter()
 ]]></Implementation>
 </Method>
 </Class>
