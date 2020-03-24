@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-18 17:04:33">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-24 11:36:29">
 <Class name="test.framework.CExecuteTests">
 <Super>%RegisteredObject</Super>
 <TimeChanged>65455,32453</TimeChanged>
@@ -9685,7 +9685,7 @@ Adicionado para compatibilidade na migração da abstração</Description>
 
 <Class name="test.unittest.s01.Service.SetorTests">
 <Super>test.unittest.UnitTestAbstract</Super>
-<TimeChanged>65456,59376.623308</TimeChanged>
+<TimeChanged>65462,41064.191729</TimeChanged>
 <TimeCreated>65455,43250.766274</TimeCreated>
 
 <Property name="Service">
@@ -9693,434 +9693,76 @@ Adicionado para compatibilidade na migração da abstração</Description>
 <Private>1</Private>
 </Property>
 
-<Property name="ServiceMock">
-<Type>s01.Service.Setor</Type>
+<Property name="SetorDAOMock">
+<Type>s01.DAO.Setor</Type>
 <Private>1</Private>
 </Property>
 
 <Method name="InicializarMocks">
-<Implementation><![CDATA[	Return $$$OK
+<Implementation><![CDATA[
+	Set ..SetorDAOMock = ..CreateMock()
+	Return $$$OK
 ]]></Implementation>
 </Method>
 
 <Method name="InicializarService">
 <Implementation><![CDATA[
-	Set ..Service = ##class(s01.Service.Setor).%New(..InicializarMocks())
+	Set ..Service = ##class(s01.Service.Setor).%New(..SetorDAOMock)
 	Return $$$OK
 ]]></Implementation>
 </Method>
 
-<UDLText name="T">
-<Content><![CDATA[
-// Method TestCadastrarAtivo()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// {
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Do ..ReplayAllMocks()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Try{
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDto = ##class(s01.DTO.Setor).%New()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDto.Descricao = "Descricao"
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDto.Status = "Ativo"
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDao = ##class(s01.DAO.Setor).%New()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Return setorDao.Cadastrar(setorDto)
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	}
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Catch erro{
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	}
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Do ..VerifyAllMocks()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// }
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// Method TestCadastrarInativo()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// {
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Do ..ReplayAllMocks()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Try{
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDto = ##class(s01.DTO.Setor).%New()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDto.Descricao = "Descricao"
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDto.Status = "Inativo"
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDao = ##class(s01.DAO.Setor).%New()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Return setorDao.Cadastrar(setorDto)
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	}
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Catch erro{
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	}
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Do ..VerifyAllMocks()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// }
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// Method TestCadastrarInvalido()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// {
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Do ..ReplayAllMocks()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Try{
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDto = ##class(s01.DTO.Setor).%New()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDto.Descricao = "Descricao"
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDto.Status = "Teste"
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Set setorDao = ##class(s01.DAO.Setor).%New()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Return setorDao.Cadastrar(setorDto)
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	}
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Catch erro{
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	}
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// 	Do ..VerifyAllMocks()
-
-]]></Content>
-</UDLText>
-
-<UDLText name="T">
-<Content><![CDATA[
-// }
-
-]]></Content>
-</UDLText>
+<Method name="TestCadastrarAtivo">
+<Implementation><![CDATA[
+ 	Do ..ReplayAllMocks()
+ 	Try{
+ 		Set setorDto = ##class(s01.DTO.Setor).%New()
+ 		Set setorDto.Descricao = "SetorAtivo"
+ 		Set setorDto.Status = "Ativo"
+ 		Set setorDao = ##class(s01.DAO.Setor).%New()
+ 		Return setorDao.Cadastrar(setorDto)
+ 	}
+ 	Catch erro{
+ 		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
+ 	}
+ 	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestCadastrarInativo">
+<Implementation><![CDATA[
+ 	Do ..ReplayAllMocks()
+ 	Try{
+ 		Set setorDto = ##class(s01.DTO.Setor).%New()
+		Set setorDto.Descricao = "SetorInativo"
+ 		Set setorDto.Status = "Inativo"
+ 		Set setorDao = ##class(s01.DAO.Setor).%New()
+
+ 		Return setorDao.Cadastrar(setorDto)
+ 	}
+ 	Catch erro{
+ 		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
+ 	}
+ 	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestCadastrarInvalido">
+<Implementation><![CDATA[
+ 	Do ..ReplayAllMocks()
+ 	Try{
+ 		Set setorDto = ##class(s01.DTO.Setor).%New()
+		Set setorDto.Descricao = "Invalido"
+ 		Set setorDto.Status = "Invalido"
+ 		Set setorDao = ##class(s01.DAO.Setor).%New()
+
+ 		Return setorDao.Cadastrar(setorDto)
+ 	}
+ 	Catch erro{
+ 		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
+ 	}
+ 	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
 </Class>
 </Export>

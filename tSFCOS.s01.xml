@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-18 17:04:24">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-24 11:36:17">
 <Class name="s01.Controller.Procedimento">
 <Super>%RegisteredObject</Super>
 <TimeChanged>65456,59917.135307</TimeChanged>
@@ -52,15 +52,15 @@
 
 <Class name="s01.Controller.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,61303.789431</TimeChanged>
+<TimeChanged>65457,33345.735172</TimeChanged>
 <TimeCreated>65442,41502.282956</TimeCreated>
 
 <Method name="Cadastrar">
 <ClassMethod>1</ClassMethod>
 <FormalSpec>setorDto</FormalSpec>
 <Implementation><![CDATA[
-	 	Set setorService = ##class(s01.Service.Setor).%New()
-	 	Return setorService.Cadastrar(setorDto)
+	 Set setorService = ##class(s01.Service.Setor).%New()
+	   Return setorService.Cadastrar(setorDto)
 ]]></Implementation>
 </Method>
 
@@ -226,8 +226,12 @@
 
 <Class name="s01.DTO.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65450,36375.533289</TimeChanged>
+<TimeChanged>65462,41423.940958</TimeChanged>
 <TimeCreated>65442,41502.700189</TimeCreated>
+
+<Property name="Id">
+<Type>%Integer</Type>
+</Property>
 
 <Property name="Mnemonico">
 <Type>%String</Type>
@@ -253,8 +257,12 @@
 
 <Class name="s01.DTO.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65443,38663.135017</TimeChanged>
+<TimeChanged>65462,41183.132758</TimeChanged>
 <TimeCreated>65442,41502.799127</TimeCreated>
+
+<Property name="Id">
+<Type>%Integer</Type>
+</Property>
 
 <Property name="Descricao">
 <Type>%String</Type>
@@ -268,7 +276,7 @@
 
 <Class name="s01.Persistencia.Procedimento">
 <Super>%Persistent,%Populate</Super>
-<TimeChanged>65456,59290.430055</TimeChanged>
+<TimeChanged>65462,41275.382534</TimeChanged>
 <TimeCreated>65451,34458.245698</TimeCreated>
 
 <Property name="Mnemonico">
@@ -282,7 +290,7 @@
 
 <Property name="Preco">
 <Type>%Decimal</Type>
-<Parameter name="MAXVAL" value="99999999.99"/>
+<Parameter name="MAXVAL" value="99.99"/>
 <Parameter name="SCALE" value="2"/>
 </Property>
 
@@ -333,23 +341,23 @@
 </Property>
 <Property name="Descricao">
 <Selectivity>5.0000%</Selectivity>
-<AverageFieldSize>4.85</AverageFieldSize>
+<AverageFieldSize>4.95</AverageFieldSize>
 </Property>
 <Property name="Mnemonico">
 <Selectivity>5.0000%</Selectivity>
-<AverageFieldSize>4.85</AverageFieldSize>
+<AverageFieldSize>4.6</AverageFieldSize>
 </Property>
 <Property name="Preco">
 <Selectivity>5.0000%</Selectivity>
 <AverageFieldSize>4.8</AverageFieldSize>
 </Property>
 <Property name="Setor">
-<Selectivity>10.0000%</Selectivity>
-<AverageFieldSize>1.65</AverageFieldSize>
+<Selectivity>7.1429%</Selectivity>
+<AverageFieldSize>1.5</AverageFieldSize>
 </Property>
 <Property name="Status">
 <Selectivity>50.0000%</Selectivity>
-<AverageFieldSize>5.9</AverageFieldSize>
+<AverageFieldSize>6.3</AverageFieldSize>
 </Property>
 <SQLMap name="IDKEY">
 <BlockCount>-4</BlockCount>
@@ -363,7 +371,7 @@
 
 <Class name="s01.Persistencia.Setor">
 <Super>%Persistent,%Populate</Super>
-<TimeChanged>65456,59205.259227</TimeChanged>
+<TimeChanged>65462,41264.863986</TimeChanged>
 <TimeCreated>65451,34416.461123</TimeCreated>
 
 <Property name="Descricao">
@@ -405,11 +413,11 @@
 </Property>
 <Property name="Descricao">
 <Selectivity>5.0000%</Selectivity>
-<AverageFieldSize>4.85</AverageFieldSize>
+<AverageFieldSize>5</AverageFieldSize>
 </Property>
 <Property name="Status">
 <Selectivity>50.0000%</Selectivity>
-<AverageFieldSize>6</AverageFieldSize>
+<AverageFieldSize>5.8</AverageFieldSize>
 </Property>
 <SQLMap name="IDKEY">
 <BlockCount>-4</BlockCount>
@@ -420,7 +428,7 @@
 
 <Class name="s01.Service.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,59917.569072</TimeChanged>
+<TimeChanged>65457,43156.148917</TimeChanged>
 <TimeCreated>65442,41503.103007</TimeCreated>
 
 <Method name="VerificaSetor">
@@ -434,28 +442,6 @@
 <FormalSpec>procedimentoDto</FormalSpec>
 <Implementation><![CDATA[
  	Set procedimentoDao = ##class(s01.DAO.Procedimento).%New() 
-
- #;	If (mnemonico '= existeNoBanco){
-
- #;		Return 0
-
- #;		// NA VIEW --> Write !!, "	Esse mnemonico não existe no banco"
-
- #;	}
-
- #;	Elseif (setor '= existeNoBanco){
-
- #;		Return 0
-
- #;		// NA VIEW --> Write !!, "	Esse setor não existe no banco"
-
- #;	}
-
- #;	Elseif (status '= existeNoBanco){
- #;		Return 0
- #;		// NA VIEW --> Write !!, "	Esse status não existe no banco"
- #;	}
- 
 	Return procedimentoDao.Cadastrar(procedimentoDto)
 ]]></Implementation>
 </Method>
@@ -504,19 +490,28 @@
 
 <Class name="s01.Service.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,58717.485319</TimeChanged>
+<TimeChanged>65462,39891.758754</TimeChanged>
 <TimeCreated>65442,41503.20529</TimeCreated>
+
+<Property name="SetorDAO">
+<Type>s01.DAO.Setor</Type>
+<Private>1</Private>
+</Property>
+
+<Method name="%OnNew">
+<FormalSpec>setorDao:s01.DAO.Setor=##class(s01.DAO.Setor).%New()</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	Set ..SetorDAO = setorDao
+	Return $$$OK
+]]></Implementation>
+</Method>
 
 <Method name="Cadastrar">
 <FormalSpec>setorDto</FormalSpec>
 <Implementation><![CDATA[
-	If ((setorDto.Status = "Ativo") || (setorDto.Status = "Inativo")){
-		Set setorDao = ##class(s01.DAO.Setor).%New()
-		Return setorDao.Cadastrar(setorDto)
-	}
- 	Else{
-	 	THROW ##class(%Exception.General).%New("	O status não é válido!!")
- 	}
+	Return:((setorDto.Status = "Ativo") || (setorDto.Status = "Inativo")) ..SetorDAO.Cadastrar(setorDto)
+	THROW ##class(%Exception.General).%New("	O status não é válido!!")
 ]]></Implementation>
 </Method>
 
@@ -524,10 +519,9 @@
 <FormalSpec>id</FormalSpec>
 <ReturnType>s01.DTO.Setor</ReturnType>
 <Implementation><![CDATA[
-	If (##class(s01.Persistencia.Setor).%ExistsId(id)){
-		Set setorDao = ##class(s01.DAO.Setor).%New()
+	If ##class(s01.Persistencia.Setor).%ExistsId(id){
 		Set setorDto = ##class(s01.DTO.Setor).%New()
-		Set setorDto = setorDao.Consultar(id)
+		Set setorDto = ..SetorDAO.Consultar(id)
 		Return setorDto
 	}
 	Else{	
@@ -538,23 +532,15 @@
 
 <Method name="Inativar">
 <FormalSpec>id</FormalSpec>
-<Implementation><![CDATA[
-	If (##class(s01.Persistencia.Setor).%ExistsId(id)){
-		Set setorDao = ##class(s01.DAO.Setor).%New()
-		Do setorDao.Inativar(id)
-	}
-	Else{
-		Return 0
-	}
+<Implementation><![CDATA[	Do:(##class(s01.Persistencia.Setor).%ExistsId(id)) ..SetorDAO.Inativar(id)
 ]]></Implementation>
 </Method>
 
 <Method name="ListarTodos">
 <ReturnType>%Library.ListOfObjects</ReturnType>
 <Implementation><![CDATA[
-	Set setorDao = ##class(s01.DAO.Setor).%New()
 	Set listaDeSetores = ##class(%Library.ListOfObjects).%New()
-	Set listaDeSetores = setorDao.ListarTodos()
+	Set listaDeSetores = ..SetorDAO.ListarTodos()
 	Return listaDeSetores
 ]]></Implementation>
 </Method>
@@ -620,7 +606,7 @@
 
 <Class name="s01.View.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,61383.76768</TimeChanged>
+<TimeChanged>65462,32069.439494</TimeChanged>
 <TimeCreated>65442,41503.305204</TimeCreated>
 
 <Method name="Menu">
