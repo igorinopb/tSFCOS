@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-24 11:36:29">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-25 12:49:50">
 <Class name="test.framework.CExecuteTests">
 <Super>%RegisteredObject</Super>
 <TimeChanged>65455,32453</TimeChanged>
@@ -9685,7 +9685,7 @@ Adicionado para compatibilidade na migração da abstração</Description>
 
 <Class name="test.unittest.s01.Service.SetorTests">
 <Super>test.unittest.UnitTestAbstract</Super>
-<TimeChanged>65462,41064.191729</TimeChanged>
+<TimeChanged>65463,43460.857204</TimeChanged>
 <TimeCreated>65455,43250.766274</TimeCreated>
 
 <Property name="Service">
@@ -9699,6 +9699,7 @@ Adicionado para compatibilidade na migração da abstração</Description>
 </Property>
 
 <Method name="InicializarMocks">
+<ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	Set ..SetorDAOMock = ..CreateMock()
 	Return $$$OK
@@ -9706,6 +9707,7 @@ Adicionado para compatibilidade na migração da abstração</Description>
 </Method>
 
 <Method name="InicializarService">
+<ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	Set ..Service = ##class(s01.Service.Setor).%New(..SetorDAOMock)
 	Return $$$OK
@@ -9714,35 +9716,32 @@ Adicionado para compatibilidade na migração da abstração</Description>
 
 <Method name="TestCadastrarAtivo">
 <Implementation><![CDATA[
- 	Do ..ReplayAllMocks()
- 	Try{
- 		Set setorDto = ##class(s01.DTO.Setor).%New()
- 		Set setorDto.Descricao = "SetorAtivo"
- 		Set setorDto.Status = "Ativo"
- 		Set setorDao = ##class(s01.DAO.Setor).%New()
- 		Return setorDao.Cadastrar(setorDto)
- 	}
- 	Catch erro{
- 		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
- 	}
- 	Do ..VerifyAllMocks()
+	Do ..ReplayAllMocks()
+	Set setorDto = ##class(s01.DTO.Setor).%New()
+	Set setorDto.Descricao = "SetorAtivo"
+	Set setorDto.Status = "Ativo"
+	Set setorDao = ##class(s01.DAO.Setor).%New()
+	Return setorDao.Cadastrar(setorDto)
+	Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
+	Do ..VerifyAllMocks()
 ]]></Implementation>
 </Method>
 
 <Method name="TestCadastrarInativo">
 <Implementation><![CDATA[
+	Set setorDto = ##class(s01.DTO.Setor).%New()
+ 	
+ 	Set setorDto.Status = "Inativo"
+ 	
+ 	Do ..Expect(..SetorDAOMock.Cadastrar(..NotNullObject("s01.DTO.Setor"))).AndReturn(199)
+ 	Do ..Expect(..SetorDAOMock.MetodoTal(199))
+ 	
  	Do ..ReplayAllMocks()
- 	Try{
- 		Set setorDto = ##class(s01.DTO.Setor).%New()
-		Set setorDto.Descricao = "SetorInativo"
- 		Set setorDto.Status = "Inativo"
- 		Set setorDao = ##class(s01.DAO.Setor).%New()
+ 	
+ 	Set retorno = ..Service.Cadastrar(setorDto)
 
- 		Return setorDao.Cadastrar(setorDto)
- 	}
- 	Catch erro{
- 		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
- 	}
+	Do $$$AssertEquals(retorno, $$$OK)
+
  	Do ..VerifyAllMocks()
 ]]></Implementation>
 </Method>

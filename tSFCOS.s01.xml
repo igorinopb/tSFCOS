@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-24 11:36:17">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-25 12:49:40">
 <Class name="s01.Controller.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,59917.135307</TimeChanged>
+<TimeChanged>65463,45935.313206</TimeChanged>
 <TimeCreated>65442,41502.179563</TimeCreated>
 
 <Method name="Cadastrar">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>procedimentoDto</FormalSpec>
+<FormalSpec>pProcedimentoDto</FormalSpec>
 <Implementation><![CDATA[
  	Set procedimentoService = ##class(s01.Service.Procedimento).%New()
- 	Do procedimentoService.VerificaSetor(procedimentoDto.idSetor)
+ 	Do procedimentoService.VerificaSetor(pProcedimentoDto.idSetor)
  	
- 	Return procedimentoService.Cadastrar(procedimentoDto)
+ 	Return procedimentoService.Cadastrar(pProcedimentoDto)
 ]]></Implementation>
 </Method>
 
 <Method name="Consultar">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>id</FormalSpec>
+<FormalSpec>pId</FormalSpec>
 <ReturnType>s01.DTO.Procedimento</ReturnType>
 <Implementation><![CDATA[
 	Set procedimentoService = ##class(s01.Service.Procedimento).%New()
 	
-	Return procedimentoService.Consultar(id)
+	Return procedimentoService.Consultar(pId)
 ]]></Implementation>
 </Method>
 
 <Method name="Inativar">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>id</FormalSpec>
+<FormalSpec>pId</FormalSpec>
 <Implementation><![CDATA[
 	Set procedimentoService = ##class(s01.Service.Procedimento).%New()
-	Do procedimentoService.Inativar(id)
+	Do procedimentoService.Inativar(pId)
 ]]></Implementation>
 </Method>
 
@@ -52,34 +52,34 @@
 
 <Class name="s01.Controller.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65457,33345.735172</TimeChanged>
+<TimeChanged>65463,46092.233118</TimeChanged>
 <TimeCreated>65442,41502.282956</TimeCreated>
 
 <Method name="Cadastrar">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>setorDto</FormalSpec>
+<FormalSpec>pSetorDto</FormalSpec>
 <Implementation><![CDATA[
 	 Set setorService = ##class(s01.Service.Setor).%New()
-	   Return setorService.Cadastrar(setorDto)
+	   Return setorService.Cadastrar(pSetorDto)
 ]]></Implementation>
 </Method>
 
 <Method name="Consultar">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>id</FormalSpec>
+<FormalSpec>pId</FormalSpec>
 <ReturnType>s01.DTO.Setor</ReturnType>
 <Implementation><![CDATA[
 	Set setorService = ##class(s01.Service.Setor).%New()
-	Return setorService.Consultar(id)
+	Return setorService.Consultar(pId)
 ]]></Implementation>
 </Method>
 
 <Method name="Inativar">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>id</FormalSpec>
+<FormalSpec>pId</FormalSpec>
 <Implementation><![CDATA[
 	Set setorService = ##class(s01.Service.Setor).%New()
-	Do setorService.Inativar(id)
+	Do setorService.Inativar(pId)
 ]]></Implementation>
 </Method>
 
@@ -98,28 +98,28 @@
 
 <Class name="s01.DAO.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,59870.472035</TimeChanged>
+<TimeChanged>65463,45981.432487</TimeChanged>
 <TimeCreated>65442,41502.496047</TimeCreated>
 
 <Method name="Cadastrar">
-<FormalSpec>procedimentoDto</FormalSpec>
+<FormalSpec>pProcedimentoDto</FormalSpec>
 <Implementation><![CDATA[
  	Set procedimentoPersistencia = ##class(s01.Persistencia.Procedimento).%New()
- 	Set procedimentoPersistencia.Descricao = procedimentoDto.Descricao
- 	Set procedimentoPersistencia.Mnemonico = procedimentoDto.Mnemonico
- 	Set procedimentoPersistencia.Preco = procedimentoDto.Preco
- 	Do procedimentoPersistencia.SetorSetObjectId(procedimentoDto.idSetor)
- 	Set procedimentoPersistencia.Status = procedimentoDto.Status
+ 	Set procedimentoPersistencia.Descricao = pProcedimentoDto.Descricao
+ 	Set procedimentoPersistencia.Mnemonico = pProcedimentoDto.Mnemonico
+ 	Set procedimentoPersistencia.Preco = pProcedimentoDto.Preco
+ 	Do procedimentoPersistencia.SetorSetObjectId(pProcedimentoDto.idSetor)
+ 	Set procedimentoPersistencia.Status = pProcedimentoDto.Status
  	
  	Return procedimentoPersistencia.%Save()
 ]]></Implementation>
 </Method>
 
 <Method name="Consultar">
-<FormalSpec>id</FormalSpec>
+<FormalSpec>pId</FormalSpec>
 <ReturnType>s01.DTO.Procedimento</ReturnType>
 <Implementation><![CDATA[
-	Set procedimentoPersistencia = ##class(s01.Persistencia.Procedimento).%OpenId(id)
+	Set procedimentoPersistencia = ##class(s01.Persistencia.Procedimento).%OpenId(pId)
 	Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
 	Set procedimentoDto.Descricao = procedimentoPersistencia.Descricao
 	Set procedimentoDto.Mnemonico = procedimentoPersistencia.Mnemonico
@@ -132,9 +132,9 @@
 </Method>
 
 <Method name="Inativar">
-<FormalSpec>id</FormalSpec>
+<FormalSpec>pId</FormalSpec>
 <Implementation><![CDATA[
-	Set procedimentoPersistencia = ##class(s01.Persistencia.Procedimento).%OpenId(id)
+	Set procedimentoPersistencia = ##class(s01.Persistencia.Procedimento).%OpenId(pId)
 	Set procedimentoPersistencia.Status = "Inativo"
 	Do procedimentoPersistencia.%Save()
 	Kill procedimentoPersistencia
@@ -168,59 +168,343 @@
 
 <Class name="s01.DAO.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,42214.94429</TimeChanged>
+<TimeChanged>65463,45545.816785</TimeChanged>
 <TimeCreated>65442,41502.592621</TimeCreated>
 
-<Method name="Cadastrar">
-<FormalSpec>setorDto</FormalSpec>
+<Method name="Salvar">
+<FormalSpec>obj:s01.DTO.Setor</FormalSpec>
+<ReturnType>%Integer</ReturnType>
 <Implementation><![CDATA[
- 	Set setorPersistencia = ##class(s01.Persistencia.Setor).%New()
- 	Set setorPersistencia.Descricao = setorDto.Descricao
- 	Set setorPersistencia.Status = setorDto.Status
- 	Return setorPersistencia.%Save()
+	Set setorPersistencia = ##class(s01.Persistencia.Setor).%OpenId(obj.Id)
+ 	Set:('$ISOBJECT(setorPersistencia)) setorPersistencia = ##class(s01.Persistencia.Setor).%New()
+ 	
+ 	Set setorPersistencia.Descricao = obj.Descricao
+ 	
+	$$$THROWONERROR(st, setorPersistencia.%Save())
+	Return setorPersistencia.%Id()
 ]]></Implementation>
 </Method>
 
 <Method name="Consultar">
-<FormalSpec>id</FormalSpec>
-<ReturnType>s01.DTO.Setor</ReturnType>
+<FormalSpec>pId</FormalSpec>
 <Implementation><![CDATA[
-	Set setorPersistencia = ##class(s01.Persistencia.Setor).%OpenId(id)
+	Set setorPersistencia = ##class(s01.Persistencia.Setor).%OpenId(pId)
+
+ 	Return:('$ISOBJECT(setorPersistencia)) ""
+ 	
 	Set setorDto = ##class(s01.DTO.Setor).%New()
-	Set setorDto.Descricao = setorPersistencia.Descricao
-	Set setorDto.Status = setorPersistencia.Status
-	Return setorDto
+
+ 	Set setorDto.Descricao = setorPersistencia.Descricao
+
+ 	Set setorDto.Status = setorPersistencia.Status
+
+ 	Return setorDto
 ]]></Implementation>
 </Method>
 
-<Method name="Inativar">
-<FormalSpec>id</FormalSpec>
-<Implementation><![CDATA[
-	Set setorPersistencia = ##class(s01.Persistencia.Setor).%OpenId(id)
-	Set setorPersistencia.Status = "Inativo"
-	Do setorPersistencia.%Save()
-	Kill setorPersistencia
-]]></Implementation>
+<Method name="Deletar">
 </Method>
 
-<Method name="ListarTodos">
-<ReturnType>%Library.ListOfObjects</ReturnType>
-<Implementation><![CDATA[
-	Set consultaSql = ##class(%ResultSet).%New()
-	Set listaDeSetores = ##class(%Library.ListOfObjects).%New()
-	Do consultaSql.Prepare("SELECT ID FROM s01_Persistencia.Setor")
-	Do consultaSql.Execute()
-	While (consultaSql.Next()){
-		Set idSetor = consultaSql.Get("ID")
-		Set setorPersistencia = ##class(s01.Persistencia.Setor).%OpenId(idSetor)
-		Set setorDto = ##class(s01.DTO.Setor).%New()
-		Set setorDto.Descricao = setorPersistencia.Descricao
-		Set setorDto.Status = setorPersistencia.Status
-		Do listaDeSetores.Insert(setorDto)
-	}
-	Return listaDeSetores
-]]></Implementation>
-</Method>
+<UDLText name="T">
+<Content><![CDATA[
+// Method Cadastrar(setorDto)
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// {
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Set setorPersistencia = ##class(s01.Persistencia.Setor).%New()
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Set setorPersistencia.Descricao = setorDto.Descricao
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Set setorPersistencia.Status = setorDto.Status
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	$$$THROWONERROR(st, setorPersistencia.%Save())
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// }
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// Method Consultar(id) As s01.DTO.Setor
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// {
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Set setorPersistencia = ##class(s01.Persistencia.Setor).%OpenId(id)
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Return:('$ISOBJECT(setorPersistencia)) ""
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Set setorDto = ##class(s01.DTO.Setor).%New()
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Set setorDto.Descricao = setorPersistencia.Descricao
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Set setorDto.Status = setorPersistencia.Status
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Return setorDto
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// }
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// Method Inativar(pId As %Integer)
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// {
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Set setorPersistencia = ##class(s01.Persistencia.Setor).%OpenId(pId)
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Set setorPersistencia.Status = "Inativo"
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Do setorPersistencia.%Save()
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// }
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// Method ListarTodos() As %Library.ListOfObjects
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// {
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Set listaDeSetores = ##class(%ListOfDataTypes).%New()
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Set consultaSql = ##class(%ResultSet).%New()
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Do consultaSql.Prepare("SELECT ID FROM s01_Persistencia.Setor")
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Do consultaSql.Execute()
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	While (consultaSql.Next()){
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 		Set idSetor = consultaSql.Get("ID")
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 		Set setorPersistencia = ##class(s01.Persistencia.Setor).%OpenId(idSetor)
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 		Set setorDto = ##class(s01.DTO.Setor).%New()
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 		Set setorDto.Descricao = setorPersistencia.Descricao
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 		Set setorDto.Status = setorPersistencia.Status
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 		Do listaDeSetores.Insert(setorDto)
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	}
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// 	Return listaDeSetores
+
+]]></Content>
+</UDLText>
+
+<UDLText name="T">
+<Content><![CDATA[
+// }
+
+]]></Content>
+</UDLText>
 </Class>
 
 
@@ -276,8 +560,13 @@
 
 <Class name="s01.Persistencia.Procedimento">
 <Super>%Persistent,%Populate</Super>
-<TimeChanged>65462,41275.382534</TimeChanged>
+<TimeChanged>65463,39054.446563</TimeChanged>
 <TimeCreated>65451,34458.245698</TimeCreated>
+
+<ForeignKey name="fkSetor">
+<Properties>Setor</Properties>
+<ReferencedClass>s01.Persistencia.Setor</ReferencedClass>
+</ForeignKey>
 
 <Property name="Mnemonico">
 <Type>%String</Type>
@@ -428,32 +717,32 @@
 
 <Class name="s01.Service.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65457,43156.148917</TimeChanged>
+<TimeChanged>65463,46050.504796</TimeChanged>
 <TimeCreated>65442,41503.103007</TimeCreated>
 
 <Method name="VerificaSetor">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>idSetor</FormalSpec>
-<Implementation><![CDATA[	Set setor = ##class(s01.Persistencia.Setor).%ExistsId(idSetor)
+<FormalSpec>pIdSetor</FormalSpec>
+<Implementation><![CDATA[	Set setor = ##class(s01.Persistencia.Setor).%ExistsId(pIdSetor)
 ]]></Implementation>
 </Method>
 
 <Method name="Cadastrar">
-<FormalSpec>procedimentoDto</FormalSpec>
+<FormalSpec>pProcedimentoDto</FormalSpec>
 <Implementation><![CDATA[
  	Set procedimentoDao = ##class(s01.DAO.Procedimento).%New() 
-	Return procedimentoDao.Cadastrar(procedimentoDto)
+	Return procedimentoDao.Cadastrar(pProcedimentoDto)
 ]]></Implementation>
 </Method>
 
 <Method name="Consultar">
-<FormalSpec>id</FormalSpec>
+<FormalSpec>pId</FormalSpec>
 <ReturnType>s01.DTO.Procedimento</ReturnType>
 <Implementation><![CDATA[
-	if (##class(s01.Persistencia.Procedimento).%ExistsId(id)){
+	if (##class(s01.Persistencia.Procedimento).%ExistsId(pId)){
 		Set procedimentoDao = ##class(s01.DAO.Procedimento).%New()
 		Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
-		Set procedimentoDto = procedimentoDao.Consultar(id)
+		Set procedimentoDto = procedimentoDao.Consultar(pId)
 		Return procedimentoDto
 	}
 	Else{
@@ -463,11 +752,11 @@
 </Method>
 
 <Method name="Inativar">
-<FormalSpec>id</FormalSpec>
+<FormalSpec>pId</FormalSpec>
 <Implementation><![CDATA[
-	If (##class(s01.Persistencia.Procedimento).%ExistsId(id)){
+	If (##class(s01.Persistencia.Procedimento).%ExistsId(pId)){
 		Set procedimentoDao = ##class(s01.DAO.Procedimento).%New()
-		Do procedimentoDao.Inativar(id)
+		Do procedimentoDao.Inativar(pId)
 	}
 	Else{
 		Return 0
@@ -490,7 +779,7 @@
 
 <Class name="s01.Service.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65462,39891.758754</TimeChanged>
+<TimeChanged>65463,46030.290898</TimeChanged>
 <TimeCreated>65442,41503.20529</TimeCreated>
 
 <Property name="SetorDAO">
@@ -499,40 +788,37 @@
 </Property>
 
 <Method name="%OnNew">
-<FormalSpec>setorDao:s01.DAO.Setor=##class(s01.DAO.Setor).%New()</FormalSpec>
+<FormalSpec>pSetorDao:s01.DAO.Setor=##class(s01.DAO.Setor).%New()</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	Set ..SetorDAO = setorDao
+	Set ..SetorDAO = pSetorDao
 	Return $$$OK
 ]]></Implementation>
 </Method>
 
 <Method name="Cadastrar">
-<FormalSpec>setorDto</FormalSpec>
+<FormalSpec>pSetorDto</FormalSpec>
 <Implementation><![CDATA[
-	Return:((setorDto.Status = "Ativo") || (setorDto.Status = "Inativo")) ..SetorDAO.Cadastrar(setorDto)
-	THROW ##class(%Exception.General).%New("	O status não é válido!!")
+	Set id = ..SetorDAO.Cadastrar(pSetorDto)
+	Do ..SetorDAO.MetodoTal(id)
 ]]></Implementation>
 </Method>
 
 <Method name="Consultar">
-<FormalSpec>id</FormalSpec>
+<FormalSpec>pId</FormalSpec>
 <ReturnType>s01.DTO.Setor</ReturnType>
-<Implementation><![CDATA[
-	If ##class(s01.Persistencia.Setor).%ExistsId(id){
-		Set setorDto = ##class(s01.DTO.Setor).%New()
-		Set setorDto = ..SetorDAO.Consultar(id)
-		Return setorDto
-	}
-	Else{	
-		Return 0
-	}
+<Implementation><![CDATA[	Return ..SetorDAO.Consultar(pId)
 ]]></Implementation>
 </Method>
 
 <Method name="Inativar">
-<FormalSpec>id</FormalSpec>
-<Implementation><![CDATA[	Do:(##class(s01.Persistencia.Setor).%ExistsId(id)) ..SetorDAO.Inativar(id)
+<FormalSpec>pId</FormalSpec>
+<Implementation><![CDATA[
+	Set obj = ..SetorDAO.Consultar(pId)
+	Set obj.Status = "Inativo"
+	Do ..SetorDAO.Salvar(obj)
+	
+	Do:(..Consultar(pId)) ..SetorDAO.Inativar(pId)
 ]]></Implementation>
 </Method>
 
@@ -549,7 +835,7 @@
 
 <Class name="s01.View.Principal">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,60098.962855</TimeChanged>
+<TimeChanged>65463,46164.356906</TimeChanged>
 <TimeCreated>65450,40853.608963</TimeCreated>
 
 <Method name="Menu">
@@ -567,16 +853,16 @@
 
 <Method name="TratarOpcao">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>opcao</FormalSpec>
+<FormalSpec>pOpcao</FormalSpec>
 <Implementation><![CDATA[
-	If (opcao = 1){
+	If (pOpcao = 1){
 		Do ..MenuProcedimento()
 	}
 	
-	ElseIf (opcao = 2){
+	ElseIf (pOpcao = 2){
 		Do ..MenuSetor()
 	}
-	ElseIf (opcao = 0){
+	ElseIf (pOpcao = 0){
 		Write #
 	}
 ]]></Implementation>
@@ -606,7 +892,7 @@
 
 <Class name="s01.View.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65462,32069.439494</TimeChanged>
+<TimeChanged>65463,46152.603053</TimeChanged>
 <TimeCreated>65442,41503.305204</TimeCreated>
 
 <Method name="Menu">
@@ -628,24 +914,24 @@
 
 <Method name="TratarOpcao">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>opcao</FormalSpec>
+<FormalSpec>pOpcao</FormalSpec>
 <Implementation><![CDATA[
-	If (opcao = 1){
+	If (pOpcao = 1){
 		Do ..Cadastrar()
 	}
 	
-	ElseIf (opcao = 2){
+	ElseIf (pOpcao = 2){
 		Do ..Consultar()
 	}
 	
-	ElseIf (opcao = 3){
+	ElseIf (pOpcao = 3){
 		Do ..Inativar()
 	}
 	
-	ElseIf (opcao = 4){
+	ElseIf (pOpcao = 4){
 		Do ..ListarTodos()
 	}
-	ElseIf (opcao = 0){
+	ElseIf (pOpcao = 0){
 		Write #
 	}
 ]]></Implementation>
@@ -797,7 +1083,7 @@
 
 <Class name="s01.View.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65456,61360.162782</TimeChanged>
+<TimeChanged>65463,46131.489497</TimeChanged>
 <TimeCreated>65442,41503.406868</TimeCreated>
 
 <Method name="Menu">
@@ -819,24 +1105,24 @@
 
 <Method name="TratarOpcao">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>opcao</FormalSpec>
+<FormalSpec>pOpcao</FormalSpec>
 <Implementation><![CDATA[
-	If (opcao = 1){
+	If (pOpcao = 1){
 		Do ..Cadastrar()
 	}
 	
-	ElseIf (opcao = 2){
+	ElseIf (pOpcao = 2){
 		Do ..Consultar()
 	}
 	
-	ElseIf (opcao = 3){
+	ElseIf (pOpcao = 3){
 		Do ..Inativar()
 	}
 	
-	ElseIf (opcao = 4){
+	ElseIf (pOpcao = 4){
 		Do ..ListarTodos()
 	}
-	ElseIf (opcao = 0){
+	ElseIf (pOpcao = 0){
 		Write #
 	}
 ]]></Implementation>
