@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-27 12:37:38">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-31 11:20:08">
 <Class name="s01.Controller.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65465,42002.644758</TimeChanged>
+<TimeChanged>65468,58711.616024</TimeChanged>
 <TimeCreated>65442,41502.179563</TimeCreated>
 
 <Property name="ProcedimentoService">
@@ -47,6 +47,23 @@
 ]]></Implementation>
 </Method>
 
+<Method name="ImportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[	Return ..ProcedimentoService.ImportarCsv(pUrlCsv)
+]]></Implementation>
+</Method>
+
+<Method name="ExportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[
+	Set dataInterna = $PIECE($HOROLOG,",",1)
+	Set horaInterna = $PIECE($HOROLOG,",",2)
+	Set urlCompletoCsv = pUrlCsv _ "\Procedimento_" _ dataInterna _ "_" _ horaInterna _ ".csv"
+	Do ..ProcedimentoService.ExportarCsv(urlCompletoCsv)
+	Return $$$OK
+]]></Implementation>
+</Method>
+
 <Method name="ExisteProcedimento">
 <FormalSpec>pId</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
@@ -58,7 +75,7 @@
 
 <Class name="s01.Controller.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65465,38323.000937</TimeChanged>
+<TimeChanged>65468,58679.555035</TimeChanged>
 <TimeCreated>65442,41502.282956</TimeCreated>
 
 <Property name="SetorService">
@@ -103,6 +120,23 @@
 ]]></Implementation>
 </Method>
 
+<Method name="ImportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[	Return ..SetorService.ImportarCsv(pUrlCsv)
+]]></Implementation>
+</Method>
+
+<Method name="ExportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[
+	Set dataInterna = $PIECE($HOROLOG,",",1)
+	Set horaInterna = $PIECE($HOROLOG,",",2)
+	Set urlCompletoCsv = pUrlCsv _ "\Setor_" _ dataInterna _ "_" _ horaInterna _ ".csv"
+	Do ..SetorService.ExportarCsv(urlCompletoCsv)
+	Return $$$OK
+]]></Implementation>
+</Method>
+
 <Method name="ExisteSetor">
 <FormalSpec>pId</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
@@ -114,11 +148,12 @@
 
 <Class name="s01.DAO.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65465,44988.710691</TimeChanged>
+<TimeChanged>65469,40721.706145</TimeChanged>
 <TimeCreated>65442,41502.496047</TimeCreated>
 
 <Method name="Salvar">
 <FormalSpec>pProcedimentoDto:s01.DTO.Procedimento</FormalSpec>
+<ReturnType>s01.Persistencia.Procedimento</ReturnType>
 <Implementation><![CDATA[
 	Set procedimentoPersistencia = ##class(s01.Persistencia.Procedimento).%OpenId(pProcedimentoDto.Id)
  	Set:('$ISOBJECT(procedimentoPersistencia)) procedimentoPersistencia = ##class(s01.Persistencia.Procedimento).%New()
@@ -127,7 +162,8 @@
  	Set procedimentoPersistencia.Preco = pProcedimentoDto.Preco
  	Do procedimentoPersistencia.SetorSetObjectId(pProcedimentoDto.Setor)
  	Set procedimentoPersistencia.Status = pProcedimentoDto.Status
-	$$$THROWONERROR(st, procedimentoPersistencia.%Save())
+	Return procedimentoPersistencia.%Save()
+	;$$$THROWONERROR(st, procedimentoPersistencia.%Save())
 ]]></Implementation>
 </Method>
 
@@ -145,15 +181,6 @@
  	Set procedimentoDto.Setor = procedimentoPersistencia.Setor.%Id()
  	Set procedimentoDto.Status = procedimentoPersistencia.Status
  	Return procedimentoDto
-]]></Implementation>
-</Method>
-
-<Method name="ExisteProcedimento">
-<FormalSpec>pId</FormalSpec>
-<ReturnType>%Boolean</ReturnType>
-<Implementation><![CDATA[
-	Return:(##class(s01.Persistencia.Procedimento).%ExistsId(pId)) 1
-	Return 0
 ]]></Implementation>
 </Method>
 
@@ -179,22 +206,75 @@
  	Return listaDeProcedimentos
 ]]></Implementation>
 </Method>
+
+<Method name="ImportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[
+	Set arquivoCsv = ##class(%File).%New(pUrlCsv)
+	Set arquivoCsvStatus = arquivoCsv.Open("R")
+	Set qtdOperacoesComSucesso = 0
+	While ('arquivoCsv.AtEnd){
+		Set statusOperacao = 0
+		Set linhaCsv = arquivoCsv.ReadLine()
+		Set dtoProcedimento = ##class(s01.DTO.Procedimento).%New()
+		Set dtoProcedimento.Mnemonico = $PIECE(linhaCsv, ";", 1)
+		Set dtoProcedimento.Descricao = $PIECE(linhaCsv, ";", 2)
+		Set dtoProcedimento.Preco = $PIECE(linhaCsv, ";", 3)
+		Set dtoProcedimento.Setor = $PIECE(linhaCsv, ";", 4)
+		Set dtoProcedimento.Status = $PIECE(linhaCsv, ";", 5)
+		If ((dtoProcedimento.Setor) '= ""){
+			Set statusOperacao = ..Salvar(dtoProcedimento)
+		}
+		If (statusOperacao = 1){
+			Set qtdOperacoesComSucesso = qtdOperacoesComSucesso + 1
+		}
+	}
+	Return qtdOperacoesComSucesso
+]]></Implementation>
+</Method>
+
+<Method name="ExportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[
+	Set arquivoCsv = ##class(%File).%New(pUrlCsv)
+	Set arquivoCsvStatus = arquivoCsv.Open("WSN")
+	Set listaDeProcedimentos = ..ListarTodos()
+	For i=1:1:listaDeProcedimentos.Count(){
+		Set itemListaDeProcedimentos = listaDeProcedimentos.GetAt(i)
+		Do arquivoCsv.WriteLine(itemListaDeProcedimentos.Mnemonico_";"_
+			itemListaDeProcedimentos.Descricao_";"_itemListaDeProcedimentos.Preco_";"_
+			itemListaDeProcedimentos.Setor_";"_itemListaDeProcedimentos.Status)
+	}
+	Do arquivoCsv.Close()
+]]></Implementation>
+</Method>
+
+<Method name="ExisteProcedimento">
+<FormalSpec>pId</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	Return:(##class(s01.Persistencia.Procedimento).%ExistsId(pId)) 1
+	Return 0
+]]></Implementation>
+</Method>
 </Class>
 
 
 <Class name="s01.DAO.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65465,40869.272326</TimeChanged>
+<TimeChanged>65469,40624.02331</TimeChanged>
 <TimeCreated>65442,41502.592621</TimeCreated>
 
 <Method name="Salvar">
 <FormalSpec>pSetorDto:s01.DTO.Setor</FormalSpec>
+<ReturnType>s01.Persistencia.Setor</ReturnType>
 <Implementation><![CDATA[
 	Set setorPersistencia = ##class(s01.Persistencia.Setor).%OpenId(pSetorDto.Id)
  	Set:('$ISOBJECT(setorPersistencia)) setorPersistencia = ##class(s01.Persistencia.Setor).%New()
  	Set setorPersistencia.Descricao = pSetorDto.Descricao
  	Set setorPersistencia.Status = pSetorDto.Status
-	$$$THROWONERROR(st, setorPersistencia.%Save())
+ 	Return setorPersistencia.%Save()
+	;$$$THROWONERROR(st, setorPersistencia.%Save())
 ]]></Implementation>
 </Method>
 
@@ -209,15 +289,6 @@
  	Set setorDto.Descricao = setorPersistencia.Descricao
  	Set setorDto.Status = setorPersistencia.Status
  	Return setorDto
-]]></Implementation>
-</Method>
-
-<Method name="ExisteSetor">
-<FormalSpec>pId</FormalSpec>
-<ReturnType>%Boolean</ReturnType>
-<Implementation><![CDATA[
-	Return:(##class(s01.Persistencia.Setor).%ExistsId(pId)) 1
-	Return 0
 ]]></Implementation>
 </Method>
 
@@ -237,6 +308,52 @@
  		Do listaDeSetores.Insert(setorDto)
  	}
  	Return listaDeSetores
+]]></Implementation>
+</Method>
+
+<Method name="ImportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[
+	Set arquivoCsv = ##class(%File).%New(pUrlCsv)
+	Set arquivoCsvStatus = arquivoCsv.Open("R")
+	Set qtdOperacoesComSucesso = 0
+	While ('arquivoCsv.AtEnd){
+		Set statusOperacao = 0
+		Set linhaCsv = arquivoCsv.ReadLine()
+		Set dtoSetor = ##class(s01.DTO.Setor).%New()
+		Set dtoSetor.Descricao = $PIECE(linhaCsv, ";", 1)
+		Set dtoSetor.Status = $PIECE(linhaCsv, ";", 2)
+		If ((dtoSetor.Status) '= ""){
+			Set statusOperacao = ..Salvar(dtoSetor)
+		}
+		If (statusOperacao = 1){
+			Set qtdOperacoesComSucesso = qtdOperacoesComSucesso + 1
+		}
+	}
+	Return qtdOperacoesComSucesso
+]]></Implementation>
+</Method>
+
+<Method name="ExportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[
+	Set arquivoCsv = ##class(%File).%New(pUrlCsv)
+	Set arquivoCsvStatus = arquivoCsv.Open("WSN")
+	Set listaDeSetores = ..ListarTodos()
+	For i=1:1:listaDeSetores.Count(){
+		Set itemListaDeSetores = listaDeSetores.GetAt(i)
+		Do arquivoCsv.WriteLine(itemListaDeSetores.Descricao_";"_itemListaDeSetores.Status)
+	}
+	Do arquivoCsv.Close()
+]]></Implementation>
+</Method>
+
+<Method name="ExisteSetor">
+<FormalSpec>pId</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	Return:(##class(s01.Persistencia.Setor).%ExistsId(pId)) 1
+	Return 0
 ]]></Implementation>
 </Method>
 </Class>
@@ -451,11 +568,16 @@
 
 <Class name="s01.Service.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65465,45413.492946</TimeChanged>
+<TimeChanged>65468,58623.957572</TimeChanged>
 <TimeCreated>65442,41503.103007</TimeCreated>
 
 <Property name="ProcedimentoDao">
 <Type>s01.DAO.Procedimento</Type>
+<Private>1</Private>
+</Property>
+
+<Property name="SetorService">
+<Type>s01.Service.Setor</Type>
 <Private>1</Private>
 </Property>
 
@@ -470,7 +592,15 @@
 
 <Method name="Salvar">
 <FormalSpec>pProcedimentoDto:s01.DTO.Procedimento</FormalSpec>
-<Implementation><![CDATA[	Do ..ProcedimentoDao.Salvar(pProcedimentoDto)
+<Implementation><![CDATA[
+	If (pProcedimentoDto.Preco <= 0){
+		THROW ##class(%Exception.General).%New("Preço deve ser maior que zero!!")
+	}
+	Set setorDto = ..SetorService.Consultar(pProcedimentoDto.Setor)
+	If (setorDto.Status = "Inativo"){
+		THROW ##class(%Exception.General).%New("O setor não pode estar Inativo!!")
+	}
+	Do ..ProcedimentoDao.Salvar(pProcedimentoDto)
 ]]></Implementation>
 </Method>
 
@@ -499,6 +629,18 @@
 ]]></Implementation>
 </Method>
 
+<Method name="ImportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[	Return ..ProcedimentoDao.ImportarCsv(pUrlCsv)
+]]></Implementation>
+</Method>
+
+<Method name="ExportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[	Do ..ProcedimentoDao.ExportarCsv(pUrlCsv)
+]]></Implementation>
+</Method>
+
 <Method name="ExisteProcedimento">
 <FormalSpec>pId</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
@@ -510,7 +652,7 @@
 
 <Class name="s01.Service.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65465,40304.303264</TimeChanged>
+<TimeChanged>65468,56387.641383</TimeChanged>
 <TimeCreated>65442,41503.20529</TimeCreated>
 
 <Property name="SetorDao">
@@ -555,6 +697,18 @@
 	Set listaDeSetores = ##class(%Library.ListOfDataTypes).%New()
 	Set listaDeSetores = ..SetorDao.ListarTodos()
 	Return listaDeSetores
+]]></Implementation>
+</Method>
+
+<Method name="ImportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[	Return ..SetorDao.ImportarCsv(pUrlCsv)
+]]></Implementation>
+</Method>
+
+<Method name="ExportarCsv">
+<FormalSpec>pUrlCsv</FormalSpec>
+<Implementation><![CDATA[	Do ..SetorDao.ExportarCsv(pUrlCsv)
 ]]></Implementation>
 </Method>
 
@@ -630,7 +784,7 @@
 
 <Class name="s01.View.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65465,45372.217885</TimeChanged>
+<TimeChanged>65468,59244.460488</TimeChanged>
 <TimeCreated>65442,41503.305204</TimeCreated>
 
 <Property name="ProcedimentoController">
@@ -656,6 +810,8 @@
 		!, "	2. Consultar",
 		!, "	3. Inativar",
 		!, "	4. Listar Todos",
+		!, "	5. Importar CSV",
+		!, "	6. Exportar CSV",
 		!!, "	0. Sair", !!, "	Digite a opção desejada: ", opcao
 		Do ..TratarOpcao(opcao)
 	} While(opcao '= 0)
@@ -679,6 +835,12 @@
 	
 	ElseIf (pOpcao = 4){
 		Do ..ListarTodos()
+	}
+	ElseIf (pOpcao = 5){
+		Do ..ImportarCsv()
+	}
+	ElseIf (pOpcao = 6){
+		Do ..ExportarCsv()
 	}
 	ElseIf (pOpcao = 0){
 		Write #
@@ -767,8 +929,7 @@
 	Set listaDeProcedimentos = ##class(%Library.ListOfDataTypes).%New()
 	Set listaDeProcedimentos = ..ProcedimentoController.ListarTodos()
 	For i=1:2:listaDeProcedimentos.Count(){
-		Write #
-		Write !!!, "			 Lista de procedimentos:"
+		Write #!!!, "			 Lista de procedimentos:"
 		Write !!!!, "	Dados do procedimento ", i, ":"
 		If (..ExisteProcedimento(i+1)){
 			Write "	Dados do procedimento ", i+1, ":"
@@ -809,6 +970,34 @@
 ]]></Implementation>
 </Method>
 
+<Method name="ImportarCsv">
+<Implementation><![CDATA[
+	Try{
+		Read #!!, "	Digite a URL do CSV a ser importado: ", urlCsv
+		Set qtdLinhasImportadas = ..ProcedimentoController.ImportarCsv(urlCsv)
+		Write #!!, "	", qtdLinhasImportadas, " operações realizadas com sucesso!"
+	}
+	Catch{
+		Write #!!, "	A URL digitada é inválida!!"
+	}
+	Do ##class(s01.View.Principal).ContinuarComEnter()
+]]></Implementation>
+</Method>
+
+<Method name="ExportarCsv">
+<Implementation><![CDATA[
+	Try{
+		Read #!!, "	Digite a URL onde será salvo o CSV: ", urlCsv
+		Set status = ..ProcedimentoController.ExportarCsv(urlCsv)
+		Write:(status) #!!, "	Operação realizada com sucesso!"
+	}
+	Catch{
+		Write #!!, "	A URL digitada é inválida!!"
+	}
+	Do ##class(s01.View.Principal).ContinuarComEnter()
+]]></Implementation>
+</Method>
+
 <Method name="ExisteProcedimento">
 <FormalSpec>pId</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
@@ -820,7 +1009,7 @@
 
 <Class name="s01.View.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65465,43995.019564</TimeChanged>
+<TimeChanged>65468,59243.558257</TimeChanged>
 <TimeCreated>65442,41503.406868</TimeCreated>
 
 <Property name="SetorController">
@@ -846,6 +1035,8 @@
 		!, "	2. Consultar",
 		!, "	3. Inativar",
 		!, "	4. Listar Todos",
+		!, "	5. Importar CSV",
+		!, "	6. Exportar CSV",
 		!!, "	0. Sair", !!, "	Digite a opção desejada: ", opcao
 		Do ..TratarOpcao(opcao)
 	} While(opcao '= 0)
@@ -869,6 +1060,12 @@
 	
 	ElseIf (pOpcao = 4){
 		Do ..ListarTodos()
+	}
+	ElseIf (pOpcao = 5){
+		Do ..ImportarCsv()
+	}
+	ElseIf (pOpcao = 6){
+		Do ..ExportarCsv()
 	}
 	ElseIf (pOpcao = 0){
 		Write #
@@ -941,8 +1138,7 @@
 	Set listaDeSetores = ##class(%Library.ListOfDataTypes).%New()
 	Set listaDeSetores = ..SetorController.ListarTodos()
 	For i=1:2:listaDeSetores.Count(){
-		Write #
-		Write !!!, "			 Lista de setores:"
+		Write #!!!, "			 Lista de setores:"
 		Write !!!!, "	Dados do setor ", i, ":"
 		If (..ExisteSetor(i+1)){
 			Write "		Dados do setor ", i+1, ":"
@@ -960,6 +1156,34 @@
 			Read !!, "	Pressione Enter para ir a próxima página ", controle
 			Kill controle
 		}
+	}
+	Do ##class(s01.View.Principal).ContinuarComEnter()
+]]></Implementation>
+</Method>
+
+<Method name="ImportarCsv">
+<Implementation><![CDATA[
+	Try{
+		Read #!!, "	Digite a URL do CSV a ser importado: ", urlCsv
+		Set qtdLinhasImportadas = ..SetorController.ImportarCsv(urlCsv)
+		Write #!!, "	", qtdLinhasImportadas, " operações realizadas com sucesso!"
+	}
+	Catch{
+		Write #!!, "	A URL digitada é inválida!!"
+	}
+	Do ##class(s01.View.Principal).ContinuarComEnter()
+]]></Implementation>
+</Method>
+
+<Method name="ExportarCsv">
+<Implementation><![CDATA[
+	Try{
+		Read #!!, "	Digite a URL onde será salvo o CSV: ", urlCsv
+		Set status = ..SetorController.ExportarCsv(urlCsv)
+		Write:(status) #!!, "	Operação realizada com sucesso!"
+	}
+	Catch{
+		Write #!!, "	A URL digitada é inválida!!"
 	}
 	Do ##class(s01.View.Principal).ContinuarComEnter()
 ]]></Implementation>
