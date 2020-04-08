@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-31 11:20:08">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-04-08 12:55:30">
 <Class name="s01.Controller.Procedimento">
 <Super>%RegisteredObject</Super>
 <TimeChanged>65468,58711.616024</TimeChanged>
@@ -262,12 +262,18 @@
 
 <Class name="s01.DAO.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65469,40624.02331</TimeChanged>
+<TimeChanged>65476,70963.705616</TimeChanged>
 <TimeCreated>65442,41502.592621</TimeCreated>
+
+<Method name="%OnNew">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[	Return $$$OK
+]]></Implementation>
+</Method>
 
 <Method name="Salvar">
 <FormalSpec>pSetorDto:s01.DTO.Setor</FormalSpec>
-<ReturnType>s01.Persistencia.Setor</ReturnType>
+<ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	Set setorPersistencia = ##class(s01.Persistencia.Setor).%OpenId(pSetorDto.Id)
  	Set:('$ISOBJECT(setorPersistencia)) setorPersistencia = ##class(s01.Persistencia.Setor).%New()
@@ -568,7 +574,7 @@
 
 <Class name="s01.Service.Procedimento">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65468,58623.957572</TimeChanged>
+<TimeChanged>65477,38470.223693</TimeChanged>
 <TimeCreated>65442,41503.103007</TimeCreated>
 
 <Property name="ProcedimentoDao">
@@ -582,10 +588,11 @@
 </Property>
 
 <Method name="%OnNew">
-<FormalSpec>pProcedimentoDao:s01.DAO.Procedimento=##class(s01.DAO.Procedimento).%New()</FormalSpec>
+<FormalSpec>pProcedimentoDao:s01.DAO.Procedimento="",pSetorService:s01.Service.Setor=""</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	Set ..ProcedimentoDao = pProcedimentoDao
+	Set:($ISOBJECT(pProcedimentoDao)) ..ProcedimentoDao = pProcedimentoDao
+	Set:($ISOBJECT(pSetorService)) ..SetorService = pSetorService
 	Return $$$OK
 ]]></Implementation>
 </Method>
@@ -641,6 +648,40 @@
 ]]></Implementation>
 </Method>
 
+<Method name="ProcedimentoDaoGet">
+<ReturnType>s01.DAO.Procedimento</ReturnType>
+<Implementation><![CDATA[
+	Set:('$ISOBJECT(i%ProcedimentoDao)) i%ProcedimentoDao = ##class(s01.DAO.Procedimento).%New()
+	Return i%ProcedimentoDao
+]]></Implementation>
+</Method>
+
+<Method name="ProcedimentoDaoSet">
+<FormalSpec>pProcedimentoDao:s01.DAO.Procedimento</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	Set i%ProcedimentoDao = pProcedimentoDao
+	Return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="SetorServiceGet">
+<ReturnType>s01.Service.Setor</ReturnType>
+<Implementation><![CDATA[
+	Set:('$ISOBJECT(i%SetorService)) i%SetorService = ##class(s01.Service.Setor).%New()
+	Return i%SetorService
+]]></Implementation>
+</Method>
+
+<Method name="SetorServiceSet">
+<FormalSpec>pSetorService:s01.Service.Setor</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	Set i%SetorService = pSetorService
+	Return $$$OK
+]]></Implementation>
+</Method>
+
 <Method name="ExisteProcedimento">
 <FormalSpec>pId</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
@@ -652,7 +693,7 @@
 
 <Class name="s01.Service.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65468,56387.641383</TimeChanged>
+<TimeChanged>65477,46397.438259</TimeChanged>
 <TimeCreated>65442,41503.20529</TimeCreated>
 
 <Property name="SetorDao">
@@ -661,17 +702,20 @@
 </Property>
 
 <Method name="%OnNew">
-<FormalSpec>pSetorDao:s01.DAO.Setor=##class(s01.DAO.Setor).%New()</FormalSpec>
+<FormalSpec>pSetorDao:s01.DAO.Setor=""</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	Set ..SetorDao = pSetorDao
+	Set:($ISOBJECT(pSetorDao)) ..SetorDao = pSetorDao
 	Return $$$OK
 ]]></Implementation>
 </Method>
 
 <Method name="Salvar">
 <FormalSpec>pSetorDto:s01.DTO.Setor</FormalSpec>
-<Implementation><![CDATA[	Do ..SetorDao.Salvar(pSetorDto)
+<Implementation><![CDATA[
+	THROW:(pSetorDto.Status = "Inativo") ##class(%Exception.General).%New("	Não é permitido cadastrar setores com status inativo")
+	Do ..SetorDao.Salvar(pSetorDto)
+	Return $$$OK
 ]]></Implementation>
 </Method>
 
@@ -709,6 +753,23 @@
 <Method name="ExportarCsv">
 <FormalSpec>pUrlCsv</FormalSpec>
 <Implementation><![CDATA[	Do ..SetorDao.ExportarCsv(pUrlCsv)
+]]></Implementation>
+</Method>
+
+<Method name="SetorDaoGet">
+<ReturnType>s01.DAO.Setor</ReturnType>
+<Implementation><![CDATA[
+	Set:('$ISOBJECT(i%SetorDao)) i%SetorDao = ##class(s01.DAO.Setor).%New()
+	Return i%SetorDao
+]]></Implementation>
+</Method>
+
+<Method name="SetorDaoSet">
+<FormalSpec>pSetorDao:s01.DAO.Setor</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	Set i%SetorDao = pSetorDao
+	Return $$$OK
 ]]></Implementation>
 </Method>
 
@@ -1009,7 +1070,7 @@
 
 <Class name="s01.View.Setor">
 <Super>%RegisteredObject</Super>
-<TimeChanged>65468,59243.558257</TimeChanged>
+<TimeChanged>65477,37226.870291</TimeChanged>
 <TimeCreated>65442,41503.406868</TimeCreated>
 
 <Property name="SetorController">
@@ -1085,8 +1146,9 @@
 	 	Do ..SetorController.Salvar(setorDto)
 	 	Write !!, "	Setor cadastrado com sucesso!!"
 	}
-	Catch{
+	Catch (erro){
 		Write #!!, "	Erro ao cadastrar Setor"
+		Write !, "	Erro: ",erro.Name
 	}
  	Do ##class(s01.View.Principal).ContinuarComEnter()
 ]]></Implementation>

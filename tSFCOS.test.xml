@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-03-25 12:49:50">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-04-08 12:58:03">
 <Class name="test.framework.CExecuteTests">
 <Super>%RegisteredObject</Super>
 <TimeChanged>65455,32453</TimeChanged>
@@ -9678,30 +9678,29 @@ Adicionado para compatibilidade na migração da abstração</Description>
 
 <Class name="test.unittest.s01.Service.ProcedimentoTests">
 <Super>test.unittest.UnitTestAbstract</Super>
-<TimeChanged>65455,43236.670308</TimeChanged>
+<TimeChanged>65477,46663.049631</TimeChanged>
 <TimeCreated>65455,43236.670308</TimeCreated>
-</Class>
-
-
-<Class name="test.unittest.s01.Service.SetorTests">
-<Super>test.unittest.UnitTestAbstract</Super>
-<TimeChanged>65463,43460.857204</TimeChanged>
-<TimeCreated>65455,43250.766274</TimeCreated>
 
 <Property name="Service">
-<Type>s01.Service.Setor</Type>
+<Type>s01.Service.Procedimento</Type>
 <Private>1</Private>
 </Property>
 
-<Property name="SetorDAOMock">
-<Type>s01.DAO.Setor</Type>
+<Property name="ProcedimentoDaoMock">
+<Type>s01.DAO.Procedimento</Type>
+<Private>1</Private>
+</Property>
+
+<Property name="SetorServiceMock">
+<Type>s01.Service.Setor</Type>
 <Private>1</Private>
 </Property>
 
 <Method name="InicializarMocks">
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	Set ..SetorDAOMock = ..CreateMock()
+	Set ..ProcedimentoDaoMock = ..CreateMock()
+	Set ..SetorServiceMock = ..CreateMock()
 	Return $$$OK
 ]]></Implementation>
 </Method>
@@ -9709,58 +9708,90 @@ Adicionado para compatibilidade na migração da abstração</Description>
 <Method name="InicializarService">
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	Set ..Service = ##class(s01.Service.Setor).%New(..SetorDAOMock)
+	Set ..Service = ##class(s01.Service.Procedimento).%New(..ProcedimentoDaoMock,..SetorServiceMock )
 	Return $$$OK
 ]]></Implementation>
 </Method>
 
-<Method name="TestCadastrarAtivo">
+<Method name="TestDeveRetornarErroAoCadastrarProcedimentosSetoresInativos">
 <Implementation><![CDATA[
+	Set procedimentDto = ##class(s01.DTO.Procedimento).%New()
+	Set procedimentDto.Preco = 10
+	Set procedimentDto.Setor = 100000000000000
+	
+	Set retornoDoMethodConsultarDeSetorServiceMock = ##class(s01.DTO.Setor).%New()
+	Set retornoDoMethodConsultarDeSetorServiceMock.Status = "Inativo"
+	
+	Do ..Expect(..SetorServiceMock.Consultar(procedimentDto.Setor)).AndReturn(retornoDoMethodConsultarDeSetorServiceMock)
 	Do ..ReplayAllMocks()
+	
+	Try{
+		Do ..Service.Salvar(procedimentDto)
+	}
+	Catch erro{
+		Do $$$AssertEquals(erro.Name,"O setor não pode estar Inativo!!")
+	}
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="test.unittest.s01.Service.SetorTests">
+<Super>test.unittest.UnitTestAbstract</Super>
+<TimeChanged>65477,46481.774418</TimeChanged>
+<TimeCreated>65455,43250.766274</TimeCreated>
+
+<Property name="Service">
+<Type>s01.Service.Setor</Type>
+<Private>1</Private>
+</Property>
+
+<Property name="SetorDaoMock">
+<Type>s01.DAO.Setor</Type>
+<Private>1</Private>
+</Property>
+
+<Method name="InicializarMocks">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	Set ..SetorDaoMock = ..CreateMock()
+	Return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="InicializarService">
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	Set ..Service = ##class(s01.Service.Setor).%New(..SetorDaoMock)
+	Return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarErroAoCadastrarSetoresInativos">
+<Implementation><![CDATA[
 	Set setorDto = ##class(s01.DTO.Setor).%New()
-	Set setorDto.Descricao = "SetorAtivo"
-	Set setorDto.Status = "Ativo"
-	Set setorDao = ##class(s01.DAO.Setor).%New()
-	Return setorDao.Cadastrar(setorDto)
-	Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
+	Set setorDto.Status = "Inativo"
+	
+	Do ..ReplayAllMocks()
+	Try{
+		Do ..Service.Salvar(setorDto)
+	}
+	Catch erro{
+		Do $$$AssertEquals(erro.Name,"	Não é permitido cadastrar setores com status inativo")
+	}
 	Do ..VerifyAllMocks()
 ]]></Implementation>
 </Method>
 
-<Method name="TestCadastrarInativo">
+<Method name="TestDeveRetornarOkAoCadastrarSetoresAtivos">
 <Implementation><![CDATA[
 	Set setorDto = ##class(s01.DTO.Setor).%New()
- 	
- 	Set setorDto.Status = "Inativo"
- 	
- 	Do ..Expect(..SetorDAOMock.Cadastrar(..NotNullObject("s01.DTO.Setor"))).AndReturn(199)
- 	Do ..Expect(..SetorDAOMock.MetodoTal(199))
- 	
- 	Do ..ReplayAllMocks()
- 	
- 	Set retorno = ..Service.Cadastrar(setorDto)
-
-	Do $$$AssertEquals(retorno, $$$OK)
-
- 	Do ..VerifyAllMocks()
-]]></Implementation>
-</Method>
-
-<Method name="TestCadastrarInvalido">
-<Implementation><![CDATA[
- 	Do ..ReplayAllMocks()
- 	Try{
- 		Set setorDto = ##class(s01.DTO.Setor).%New()
-		Set setorDto.Descricao = "Invalido"
- 		Set setorDto.Status = "Invalido"
- 		Set setorDao = ##class(s01.DAO.Setor).%New()
-
- 		Return setorDao.Cadastrar(setorDto)
- 	}
- 	Catch erro{
- 		Do $$$AssertEquals(erro.Name, "	O status não é válido!!")
- 	}
- 	Do ..VerifyAllMocks()
+	Set setorDto.Status = "Ativo"
+	
+	Do ..ReplayAllMocks()
+	Do ..Service.Salvar(setorDto)
+	Do ..VerifyAllMocks()
 ]]></Implementation>
 </Method>
 </Class>
