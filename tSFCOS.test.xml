@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-04-08 12:58:03">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-04-09 14:43:26">
 <Class name="test.framework.CExecuteTests">
 <Super>%RegisteredObject</Super>
 <TimeChanged>65455,32453</TimeChanged>
@@ -9678,7 +9678,7 @@ Adicionado para compatibilidade na migração da abstração</Description>
 
 <Class name="test.unittest.s01.Service.ProcedimentoTests">
 <Super>test.unittest.UnitTestAbstract</Super>
-<TimeChanged>65477,46663.049631</TimeChanged>
+<TimeChanged>65478,52838.493189</TimeChanged>
 <TimeCreated>65455,43236.670308</TimeCreated>
 
 <Property name="Service">
@@ -9717,12 +9717,12 @@ Adicionado para compatibilidade na migração da abstração</Description>
 <Implementation><![CDATA[
 	Set procedimentDto = ##class(s01.DTO.Procedimento).%New()
 	Set procedimentDto.Preco = 10
-	Set procedimentDto.Setor = 100000000000000
+	Set procedimentDto.Setor = 1
 	
-	Set retornoDoMethodConsultarDeSetorServiceMock = ##class(s01.DTO.Setor).%New()
-	Set retornoDoMethodConsultarDeSetorServiceMock.Status = "Inativo"
+	Set setorDto = ##class(s01.DTO.Setor).%New()
+	Set setorDto.Status = "Inativo"
 	
-	Do ..Expect(..SetorServiceMock.Consultar(procedimentDto.Setor)).AndReturn(retornoDoMethodConsultarDeSetorServiceMock)
+	Do ..Expect(..SetorServiceMock.Consultar(procedimentDto.Setor)).AndReturn(setorDto)
 	Do ..ReplayAllMocks()
 	
 	Try{
@@ -9734,12 +9734,28 @@ Adicionado para compatibilidade na migração da abstração</Description>
 	Do ..VerifyAllMocks()
 ]]></Implementation>
 </Method>
+
+<Method name="TestDeveRetornarOkAoCadastrarProcedimentosSetoresAtivos">
+<Implementation><![CDATA[
+	Set procedimentDto = ##class(s01.DTO.Procedimento).%New()
+	Set procedimentDto.Preco = 10
+	Set procedimentDto.Setor = 1
+	Set setorDto = ##class(s01.DTO.Setor).%New()
+	Set setorDto.Status = "Ativo"
+	Do ..Expect(..SetorServiceMock.Consultar(procedimentDto.Setor)).AndReturn(procedimentDto)
+	Do ..Expect(..ProcedimentoDaoMock.Salvar(procedimentDto)).AndReturn(1)
+	Do ..ReplayAllMocks()
+	Set status = ..Service.Salvar(procedimentDto)
+	Do $$$AssertEquals(status, $$$OK)
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
 </Class>
 
 
 <Class name="test.unittest.s01.Service.SetorTests">
 <Super>test.unittest.UnitTestAbstract</Super>
-<TimeChanged>65477,46481.774418</TimeChanged>
+<TimeChanged>65478,51435.537238</TimeChanged>
 <TimeCreated>65455,43250.766274</TimeCreated>
 
 <Property name="Service">
@@ -9779,8 +9795,8 @@ Adicionado para compatibilidade na migração da abstração</Description>
 	}
 	Catch erro{
 		Do $$$AssertEquals(erro.Name,"	Não é permitido cadastrar setores com status inativo")
+		Do ..VerifyAllMocks()
 	}
-	Do ..VerifyAllMocks()
 ]]></Implementation>
 </Method>
 
@@ -9788,9 +9804,103 @@ Adicionado para compatibilidade na migração da abstração</Description>
 <Implementation><![CDATA[
 	Set setorDto = ##class(s01.DTO.Setor).%New()
 	Set setorDto.Status = "Ativo"
+	Do ..Expect(..SetorDaoMock.Salvar(setorDto)).AndReturn(1)	
+	Do ..ReplayAllMocks()
+	Set status = ..Service.Salvar(setorDto)
+	Do $$$AssertEquals(status, $$$OK)
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarErroAoCadastrarSetoresComStatusInexistente">
+<Implementation><![CDATA[
+	Set setorDto = ##class(s01.DTO.Setor).%New()
+	Set setorDto.Status = "QualquerCoisa"
 	
 	Do ..ReplayAllMocks()
-	Do ..Service.Salvar(setorDto)
+	Try{
+		Do ..Service.Salvar(setorDto)
+	}
+	Catch erro{
+		Do $$$AssertEquals(erro.Name,"	O status não está correto")
+		Do ..VerifyAllMocks()
+	}
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarOkAoConsultarSetor">
+<Implementation><![CDATA[
+	Set setorDto = ##class(s01.DTO.Setor).%New()
+	Set setorDto.Id = 1
+	Set setorDto.Descricao = "Descricao"
+	Do ..Expect(..SetorDaoMock.Consultar(setorDto.Id)).AndReturn(setorDto)
+	Do ..ReplayAllMocks()
+	Set consulta = ..Service.Consultar(setorDto.Id)
+	Do $$$AssertEquals(consulta.Descricao, "Descricao")
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarOkAoInativarSetor">
+<Implementation><![CDATA[
+	Set setorDto = ##class(s01.DTO.Setor).%New()
+	Set setorDto.Id = 1
+	Set setorDto.Descricao = "Descricao"
+	Set setorDto.Status = "Ativo"
+	Do ..Expect(..SetorDaoMock.Consultar(setorDto.Id)).AndReturn(setorDto)
+	Do ..Expect(..SetorDaoMock.Salvar(setorDto)).AndReturn($$$OK)
+	Do ..ReplayAllMocks()
+	Set status = ..Service.Inativar(setorDto.Id)
+	Do $$$AssertEquals(status, $$$OK)
+	Do $$$AssertEquals(setorDto.Status, "Inativo")
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarListaDeSetores">
+<Implementation><![CDATA[
+	Set listaDeSetores = ##class(%Library.ListOfDataTypes).%New()
+	Set setorDto = ##class(s01.DTO.Setor).%New()
+	Set setorDto.Descricao = "Desc"
+	Set setorDto.Status = "Ativo"
+	Do listaDeSetores.Insert(setorDto)
+	Do ..Expect(..SetorDaoMock.ListarTodos()).AndReturn(listaDeSetores)
+	Do ..ReplayAllMocks()
+	Set lista = ..Service.ListarTodos()
+	Do $$$AssertEquals(lista.Count(), 1)
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarQuantidadeDeImportacoesComSucesso">
+<Implementation><![CDATA[
+	Set pUrlCsv  = "C:\Users\igor.bazilio\Documents\setoresTeste.csv"
+	Do ..Expect(..SetorDaoMock.ImportarCsv(pUrlCsv)).AndReturn(5)
+	Do ..ReplayAllMocks()
+	Set resultado = ..Service.ImportarCsv(pUrlCsv)
+	Do $$$AssertEquals(resultado, 5)
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarOkAoExportarCsv">
+<Implementation><![CDATA[
+	Set pUrlCsv  = "C:\Users\igor.bazilio\Documents"
+	Do ..Expect(..SetorDaoMock.ExportarCsv(pUrlCsv))
+	Do ..ReplayAllMocks()
+	Set resultado = ..Service.ExportarCsv(pUrlCsv)
+	Do $$$AssertEquals(resultado, $$$OK)
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarVerdadeiroOuFalsoAoVerificarSeExisteSetor">
+<Implementation><![CDATA[
+	Set Id = 1
+	Do ..Expect(..SetorDaoMock.ExisteSetor(Id)).AndReturn($$$OK)
+	Do ..ReplayAllMocks()
+	Set status = ..Service.ExisteSetor(Id)
+	Do $$$AssertEquals(status, $$$OK)
 	Do ..VerifyAllMocks()
 ]]></Implementation>
 </Method>
