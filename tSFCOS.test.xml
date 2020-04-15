@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-04-09 14:43:26">
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2.1 (Build 801)" ts="2020-04-15 17:38:56">
 <Class name="test.framework.CExecuteTests">
 <Super>%RegisteredObject</Super>
 <TimeChanged>65455,32453</TimeChanged>
@@ -9678,7 +9678,7 @@ Adicionado para compatibilidade na migração da abstração</Description>
 
 <Class name="test.unittest.s01.Service.ProcedimentoTests">
 <Super>test.unittest.UnitTestAbstract</Super>
-<TimeChanged>65478,52838.493189</TimeChanged>
+<TimeChanged>65484,63360.694397</TimeChanged>
 <TimeCreated>65455,43236.670308</TimeCreated>
 
 <Property name="Service">
@@ -9710,6 +9710,23 @@ Adicionado para compatibilidade na migração da abstração</Description>
 <Implementation><![CDATA[
 	Set ..Service = ##class(s01.Service.Procedimento).%New(..ProcedimentoDaoMock,..SetorServiceMock )
 	Return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarErroAoCadastrarProcedimentosComPrecoNegativo">
+<Implementation><![CDATA[
+	Set procedimentDto = ##class(s01.DTO.Procedimento).%New()
+	Set procedimentDto.Preco = -10
+	
+	Do ..ReplayAllMocks()
+	
+	Try{
+		Do ..Service.Salvar(procedimentDto)
+	}
+	Catch erro{
+		Do $$$AssertEquals(erro.Name,"Preço deve ser maior que zero!!")
+	}
+	Do ..VerifyAllMocks()
 ]]></Implementation>
 </Method>
 
@@ -9746,6 +9763,83 @@ Adicionado para compatibilidade na migração da abstração</Description>
 	Do ..Expect(..ProcedimentoDaoMock.Salvar(procedimentDto)).AndReturn(1)
 	Do ..ReplayAllMocks()
 	Set status = ..Service.Salvar(procedimentDto)
+	Do $$$AssertEquals(status, $$$OK)
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarOkAoConsultarProcedimento">
+<Implementation><![CDATA[
+	Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
+	Set procedimentoDto.Id = 1
+	Set procedimentoDto.Mnemonico = "ABC"
+	Do ..Expect(..ProcedimentoDaoMock.Consultar(procedimentoDto.Id)).AndReturn(procedimentoDto)
+	Do ..ReplayAllMocks()
+	Set consulta = ..Service.Consultar(procedimentoDto.Id)
+	Do $$$AssertEquals(consulta.Mnemonico, "ABC")
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarOkAoInativarProcedimento">
+<Implementation><![CDATA[
+	Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
+	Set procedimentoDto.Id = 1
+	Set procedimentoDto.Mnemonico = "ABC"
+	Set procedimentoDto.Status = "Ativo"
+	Do ..Expect(..ProcedimentoDaoMock.Consultar(procedimentoDto.Id)).AndReturn(procedimentoDto)
+	Do ..Expect(..ProcedimentoDaoMock.Salvar(procedimentoDto)).AndReturn($$$OK)
+	Do ..ReplayAllMocks()
+	Set status = ..Service.Inativar(procedimentoDto.Id)
+	Do $$$AssertEquals(status, $$$OK)
+	Do $$$AssertEquals(procedimentoDto.Status, "Inativo")
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarListaDeProcedimentos">
+<Implementation><![CDATA[
+	Set listaDeProcedimentos = ##class(%Library.ListOfDataTypes).%New()
+	Set procedimentoDto = ##class(s01.DTO.Procedimento).%New()
+	Set procedimentoDto.Mnemonico = "ABC"
+	Set procedimentoDto.Status = "Ativo"
+	Do listaDeProcedimentos.Insert(procedimentoDto)
+	Do ..Expect(..ProcedimentoDaoMock.ListarTodos()).AndReturn(listaDeProcedimentos)
+	Do ..ReplayAllMocks()
+	Set lista = ..Service.ListarTodos()
+	Do $$$AssertEquals(lista.Count(), 1)
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarQuantidadeDeImportacoesComSucesso">
+<Implementation><![CDATA[
+	Set pUrlCsv  = "C:\Users\igor.bazilio\Documents\procedimentosTeste.csv"
+	Do ..Expect(..ProcedimentoDaoMock.ImportarCsv(pUrlCsv)).AndReturn(5)
+	Do ..ReplayAllMocks()
+	Set resultado = ..Service.ImportarCsv(pUrlCsv)
+	Do $$$AssertEquals(resultado, 5)
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarOkAoExportarCsv">
+<Implementation><![CDATA[
+	Set pUrlCsv  = "C:\Users\igor.bazilio\Documents"
+	Do ..Expect(..ProcedimentoDaoMock.ExportarCsv(pUrlCsv))
+	Do ..ReplayAllMocks()
+	Set resultado = ..Service.ExportarCsv(pUrlCsv)
+	Do $$$AssertEquals(resultado, $$$OK)
+	Do ..VerifyAllMocks()
+]]></Implementation>
+</Method>
+
+<Method name="TestDeveRetornarVerdadeiroOuFalsoAoVerificarSeExisteProcedimento">
+<Implementation><![CDATA[
+	Set Id = 1
+	Do ..Expect(..ProcedimentoDaoMock.ExisteProcedimento(Id)).AndReturn($$$OK)
+	Do ..ReplayAllMocks()
+	Set status = ..Service.ExisteProcedimento(Id)
 	Do $$$AssertEquals(status, $$$OK)
 	Do ..VerifyAllMocks()
 ]]></Implementation>
